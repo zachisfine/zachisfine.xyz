@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kick-mod-helper &middot; zachisfine</title>
+  <meta name="description" content="Floating moderator panel that runs on kick.com. Spam detection, user tracking, chat velocity monitoring." />
+  <link rel="canonical" href="https://zachisfine.xyz/projects/kick-mod-helper.html" />
+  <meta name="robots" content="index,follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="kick-mod-helper &middot; zachisfine" />
+  <meta property="og:description" content="Floating moderator panel for kick.com with spam detection, user tracking, and chat velocity monitoring." />
+  <meta property="og:url" content="https://zachisfine.xyz/projects/kick-mod-helper.html" />
+  <meta property="og:image" content="https://zachisfine.xyz/img/kick-mod-helper/overview.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="parallax" aria-hidden="true">
+    <div class="parallax__grid"></div>
+    <div class="parallax__glow parallax__glow--a"></div>
+    <div class="parallax__glow parallax__glow--b"></div>
+    <div class="parallax__glow parallax__glow--c"></div>
+  </div>
+  <main class="page">
+    <a class="back" href="/">&larr; back</a>
+    <header class="hero">
+      <h1 class="name">kick-mod-helper</h1>
+      <p class="tagline">floating moderator panel for kick.com</p>
+      <div class="meta-row">
+        <span class="tag-pill">chrome extension</span>
+        <span class="tag-pill">vanilla js</span>
+        <span class="tag-pill">mv3</span>
+      </div>
+    </header>
+
+    <section class="block">
+      <h2 class="label"><span class="mark"></span>screenshots</h2>
+      <div class="gallery">
+        <figure>
+          <img src="/img/kick-mod-helper/overview.png" alt="kick-mod-helper overlay on kick.com" />
+          <figcaption>overlay running on kick.com</figcaption>
+        </figure>
+        <figure>
+          <img src="/img/kick-mod-helper/spam.png" alt="spam detection panel" />
+          <figcaption>spam detection section</figcaption>
+        </figure>
+        <figure>
+          <img src="/img/kick-mod-helper/watch.png" alt="watch list panel" />
+          <figcaption>user watch list</figcaption>
+        </figure>
+        <figure>
+          <img src="/img/kick-mod-helper/keyword.png" alt="keyword filter panel" />
+          <figcaption>keyword filters</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2 class="label"><span class="mark"></span>features</h2>
+      <ul class="feature-list">
+        <li>floating overlay that runs on kick.com chat</li>
+        <li>spam detection with configurable rules</li>
+        <li>user watch list with quick-mute</li>
+        <li>keyword filters with whitelist support</li>
+        <li>chat-velocity monitoring</li>
+        <li>muted user review section</li>
+        <li>message fingerprinting to survive virtual-scroll reuse</li>
+        <li>chrome mv3 extension, no external services</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <h2 class="label"><span class="mark"></span>intended for</h2>
+      <p class="prose">kick.com streamers and moderators who need real-time visibility over chat during high-activity broadcasts &mdash; especially when raid traffic, coordinated spam, or new followers make manual moderation impractical.</p>
+    </section>
+
+    <footer class="foot muted">
+      <p>&copy; 2026 zachisfine &middot; <a href="/">home</a></p>
+    </footer>
+  </main>
+  <script src="/parallax.js" defer></script>
+</body>
+</html>

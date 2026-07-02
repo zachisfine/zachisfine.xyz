@@ -1,0 +1,6 @@
+.claude/
+.playwright-mcp/
+.remember/
+_mocks/
+mockup-*.png
+_og.html
