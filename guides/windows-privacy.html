@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>windows os privacy enhancement &middot; zachisfine</title>
+  <meta name="description" content="Disable Windows telemetry, Cortana, and Recall the safe way. Compares Win11Debloat, Privatezilla, and Winaero Tweaker with what each is good for." />
+  <link rel="canonical" href="https://zachisfine.xyz/guides/windows-privacy.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="windows os privacy enhancement" />
+  <meta property="og:description" content="Debloat Windows without breaking it. Tool comparison + practical workflow." />
+  <meta property="og:url" content="https://zachisfine.xyz/guides/windows-privacy.html" />
+  <meta property="og:image" content="https://zachisfine.xyz/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="parallax" aria-hidden="true">
+    <div class="parallax__grid"></div>
+    <div class="parallax__glow parallax__glow--a"></div>
+    <div class="parallax__glow parallax__glow--b"></div>
+    <div class="parallax__glow parallax__glow--c"></div>
+  </div>
+  <main class="page">
+    <a class="back" href="/">&larr; back</a>
+
+    <header class="hero">
+      <h1 class="name">windows os privacy</h1>
+      <p class="tagline">disable telemetry, recall, and cortana the safe way &mdash; and gain performance while you&rsquo;re at it</p>
+      <div class="meta-row">
+        <span class="tag-pill">windows</span>
+        <span class="tag-pill">debloat</span>
+        <span class="tag-pill">telemetry</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="on this page">
+      <p class="toc__title">on this page</p>
+      <ul class="toc__list">
+        <li><a href="#why">what windows collects</a></li>
+        <li><a href="#prep">before you touch anything</a></li>
+        <li><a href="#tools">tool comparison</a></li>
+        <li><a href="#disable">what to actually disable</a></li>
+        <li><a href="#gotchas">gotchas</a></li>
+      </ul>
+    </nav>
+
+    <section class="block" id="why">
+      <h2 class="label"><span class="mark"></span>what windows collects by default</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>a stock windows 11 install sends telemetry to microsoft on boot, on app launch, on typing (typing personalization), on browsing (via edge / bing / cortana suggestions), and now optionally on <em>everything you look at on your screen</em> (recall). most of it can be turned off, but the ui hides the switches under multiple layers of &ldquo;improve your experience&rdquo; nudging.</p>
+      </div>
+      <p class="prose">the categories worth turning off, roughly in order of impact:</p>
+      <ul class="feature-list">
+        <li><strong>diagnostic data</strong> &mdash; the main telemetry stream. drops to &ldquo;required only&rdquo; at settings &rarr; privacy &rarr; diagnostics &amp; feedback</li>
+        <li><strong>tailored experiences</strong> &mdash; lets microsoft use your telemetry to personalize ads and suggestions in the shell</li>
+        <li><strong>advertising id</strong> &mdash; a per-user id that lets microsoft/uwp apps track you across the system</li>
+        <li><strong>cortana</strong> &mdash; largely a background service now that the assistant surface is gone; still worth disabling</li>
+        <li><strong>recall</strong> &mdash; the ai screen-snapshot feature. off by default on most skus but a running attack-surface concern; disable and remove where possible</li>
+        <li><strong>copilot</strong> &mdash; the ai sidebar. minimal telemetry when unused but chatty when active</li>
+        <li><strong>online speech recognition</strong> &mdash; sends voice audio to microsoft servers</li>
+        <li><strong>activity history</strong> &mdash; syncs opened files / apps to microsoft cloud</li>
+        <li><strong>location history</strong> &mdash; even on desktops with no gps, this collects wifi/ip-based location</li>
+        <li><strong>edge / bing / start-menu web search</strong> &mdash; every search you do in the start menu becomes a bing query</li>
+      </ul>
+    </section>
+
+    <section class="block" id="prep">
+      <h2 class="label"><span class="mark"></span>before you touch anything</h2>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        create a system restore point (or a full image backup) before running any debloat tool. these tools work by modifying registry keys, group policy, scheduled tasks, and app packages &mdash; a rare edge case can leave you with a broken start menu or store, and rolling back is much faster than reinstalling.
+      </div>
+      <ul class="feature-list">
+        <li>create a restore point (<em>control panel &rarr; recovery &rarr; configure system restore &rarr; create</em>)</li>
+        <li>optional: full image backup with macrium reflect free or windows &ldquo;create a system image&rdquo;</li>
+        <li>close everything &mdash; some tweaks take effect only after reboot</li>
+        <li>if you use a microsoft account, know your recovery details before disabling any account features</li>
+        <li>if bitlocker is on, know your recovery key</li>
+      </ul>
+    </section>
+
+    <section class="block" id="tools">
+      <h2 class="label"><span class="mark"></span>tool comparison</h2>
+      <table class="cmp-table">
+        <thead>
+          <tr><th>tool</th><th>windows</th><th>best for</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/Raphire/Win11Debloat" rel="noopener">Win11Debloat</a></td>
+            <td>11 (some 10 support)</td>
+            <td>opinionated, interactive powershell script. best out-of-box preset for windows 11. removes bloat apps, disables telemetry, cleans start menu, disables recall / copilot at the group-policy level. safe defaults; each step is a prompt so you can skip pieces</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/builtbybel/privatezilla" rel="noopener">Privatezilla</a></td>
+            <td>10 (11 partial)</td>
+            <td>gui app that toggles about 60 privacy settings and shows current state. good if you want a checklist you can revisit later. windows 10 is its home turf</td>
+          </tr>
+          <tr>
+            <td><a href="https://winaerotweaker.com/" rel="noopener">Winaero Tweaker</a></td>
+            <td>7 / 8 / 10 / 11</td>
+            <td>the swiss army knife for windows tweaks &mdash; broader than just privacy. covers explorer, context menus, boot, taskbar, and a large privacy section. best if you also want to reshape the ui</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="prose">these three overlap by design. the workflow that works: run Win11Debloat first for the big-hammer defaults, then Privatezilla or Winaero for the finer knobs you want to keep control of. you can undo most changes in each of the three, but a restore point is faster and more reliable than the tools&rsquo; own undo.</p>
+    </section>
+
+    <section class="block" id="disable">
+      <h2 class="label"><span class="mark"></span>what to actually disable</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; the checklist that hits the important 90%</span>
+        <ul>
+          <li>diagnostic data &rarr; required only</li>
+          <li>advertising id &rarr; off</li>
+          <li>tailored experiences &rarr; off</li>
+          <li>online speech recognition &rarr; off</li>
+          <li>activity history &rarr; off, clear existing</li>
+          <li>location services &rarr; off (unless you need it for a specific app)</li>
+          <li>start menu &ldquo;show search highlights&rdquo; and web results &rarr; off</li>
+          <li>cortana background app &rarr; disabled</li>
+          <li>recall &rarr; disabled via group policy (win11debloat does this)</li>
+          <li>edge as system browser &rarr; replace with brave / firefox (see <a href="/guides/browser-privacy.html">browser privacy</a>)</li>
+          <li>onedrive automatic backup of documents/pictures/desktop &rarr; off if you don&rsquo;t use it (it&rsquo;s on by default and silently syncs folders)</li>
+          <li>widgets pane &mdash; disabled or uninstalled</li>
+          <li>ads in start menu / lock screen / notifications &mdash; off</li>
+          <li>&ldquo;suggested content in settings&rdquo; &mdash; off</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="gotchas">
+      <h2 class="label"><span class="mark"></span>gotchas</h2>
+      <ul class="feature-list">
+        <li>windows update will occasionally reset some of these back to defaults during feature updates &mdash; re-run your tool after every feature update</li>
+        <li>a microsoft account (vs local account) forces some settings back on; a local account gives you more sustainable privacy but loses some sync features. win11 tries hard to hide the &ldquo;local account&rdquo; option during setup &mdash; disconnect ethernet + wifi during oobe to force it</li>
+        <li>completely uninstalling copilot / recall packages can break future feature updates. disabling them via group policy is the sustainable path</li>
+        <li>edge cannot be fully uninstalled &mdash; it&rsquo;s a system component. you can remove it from the taskbar / start menu and set another default browser, but the process still exists</li>
+        <li>if you use windows hello, some biometric telemetry is required for the feature to work; disabling &ldquo;improve inking &amp; typing&rdquo; is the compromise</li>
+        <li>gamers: disable game bar telemetry but leave game mode / hags on &mdash; those are performance features, not privacy issues</li>
+        <li>enterprise / education skus have finer-grained group policy controls that home sku lacks &mdash; if you have access to windows pro, prefer group policy over registry hacks for maintainability</li>
+      </ul>
+    </section>
+
+    <footer class="foot muted">
+      <p>&copy; 2026 zachisfine &middot; <a href="/">home</a> &middot; <a href="/guides/browser-privacy.html">browser privacy</a> &middot; <a href="/guides/network-privacy.html">network privacy</a></p>
+    </footer>
+  </main>
+  <script src="/parallax.js" defer></script>
+</body>
+</html>

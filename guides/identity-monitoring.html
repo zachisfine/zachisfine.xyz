@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>identity monitoring &amp; data removal services &middot; zachisfine</title>
+  <meta name="description" content="A guide to identity monitoring and data broker removal: what these services do, how to pick one, a comprehensive provider list, and the gotchas to know before you sign up." />
+  <link rel="canonical" href="https://zachisfine.xyz/guides/identity-monitoring.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="identity monitoring &amp; data removal services" />
+  <meta property="og:description" content="How to pick a data broker removal / identity monitoring service, and a full provider list." />
+  <meta property="og:url" content="https://zachisfine.xyz/guides/identity-monitoring.html" />
+  <meta property="og:image" content="https://zachisfine.xyz/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="parallax" aria-hidden="true">
+    <div class="parallax__grid"></div>
+    <div class="parallax__glow parallax__glow--a"></div>
+    <div class="parallax__glow parallax__glow--b"></div>
+    <div class="parallax__glow parallax__glow--c"></div>
+  </div>
+  <main class="page">
+    <a class="back" href="/">&larr; back</a>
+
+    <header class="hero">
+      <h1 class="name">identity monitoring &amp; data removal</h1>
+      <p class="tagline">what these services actually do, how to pick one, and a full provider list</p>
+      <div class="meta-row">
+        <span class="tag-pill">privacy</span>
+        <span class="tag-pill">opt-out</span>
+        <span class="tag-pill">data brokers</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="on this page">
+      <p class="toc__title">on this page</p>
+      <ul class="toc__list">
+        <li><a href="#what">what these services do</a></li>
+        <li><a href="#pick">how to pick one</a></li>
+        <li><a href="#providers">provider list</a></li>
+        <li><a href="#workflow">how to actually use them</a></li>
+        <li><a href="#gotchas">gotchas</a></li>
+      </ul>
+    </nav>
+
+    <section class="block" id="what">
+      <h2 class="label"><span class="mark"></span>what these services do</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>they crawl data broker sites and people-search engines (spokeo, whitepages, beenverified, radaris, and dozens more), find your name / phone / address / relatives, and submit opt-out requests on your behalf. some also watch for breach appearances and dark-web listings. the paid ones save you dozens of hours of manual work every quarter.</p>
+      </div>
+      <p class="prose">your data ends up on hundreds of broker sites without you ever signing up for them. voter rolls, property records, court filings, marketing lists, and old social profiles get scraped, aggregated, and resold. each of these sites has its own opt-out form &mdash; some by email, some by mailed notarized affidavit, some behind a captcha you have to solve every ninety days when they re-list you. removal services automate this. the good ones give you a dashboard of what was found, what&rsquo;s been submitted, and what&rsquo;s been confirmed removed.</p>
+      <p class="prose">identity monitoring is a related but different feature: instead of removing you from broker sites, it watches for your ssn, email, or phone number showing up in breach dumps and dark-web marketplaces. many providers bundle both.</p>
+    </section>
+
+    <section class="block" id="pick">
+      <h2 class="label"><span class="mark"></span>how to pick one</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; what to actually compare</span>
+        <ul>
+          <li>how many broker sites they cover (real number, not marketing)</li>
+          <li>whether removal is automated or you still have to fill out forms</li>
+          <li>re-scan cadence (brokers relist you every 30&ndash;90 days &mdash; you need quarterly at minimum)</li>
+          <li>whether identity monitoring / breach alerts are bundled or extra</li>
+          <li>family plan pricing if you&rsquo;re covering a partner or parents</li>
+          <li>what happens if you cancel &mdash; do the opt-outs stick, or do they let brokers relist you?</li>
+        </ul>
+      </div>
+      <p class="prose">every service in the list below covers the top-20 broker sites; where they differ is the long tail. cheaper providers cover 50&ndash;100 sites; the top tier covers 200+. what matters more than raw count is whether they cover the brokers that host <em>your</em> specific data &mdash; some brokers are regional, some are industry-specific. a free scan (most vendors offer one) will tell you where you actually show up before you commit.</p>
+    </section>
+
+    <section class="block" id="providers">
+      <h2 class="label"><span class="mark"></span>provider list</h2>
+      <p class="prose">roughly grouped by focus. no rankings &mdash; the right pick depends on your budget, family situation, and where your data has ended up.</p>
+
+      <h3 class="sub"><span class="num">01</span>broker removal &amp; monitoring bundles</h3>
+      <ul class="feature-list">
+        <li><a href="https://aura.com/" rel="noopener">Aura</a> &mdash; broker removal + identity monitoring + credit monitoring in one product</li>
+        <li><a href="https://www.deleteme.com/" rel="noopener">DeleteMe</a> &mdash; broker removal only; strong quarterly reports; family plans</li>
+        <li><a href="https://www.incogni.com/" rel="noopener">Incogni</a> &mdash; automated broker removal by the surfshark team</li>
+        <li><a href="https://www.kanary.com/" rel="noopener">Kanary Copilot</a> &mdash; broker removal + reputation monitoring</li>
+        <li><a href="https://www.optery.com/" rel="noopener">Optery</a> &mdash; broker removal with per-tier site counts; has a free tier for the biggest brokers</li>
+        <li><a href="https://helloprivacy.com/" rel="noopener">HelloPrivacy</a> &mdash; broker removal + monitoring</li>
+        <li><a href="https://www.cloaked.com/" rel="noopener">Cloaked</a> &mdash; broker removal plus disposable identities (phone / email / cards)</li>
+        <li><a href="https://easyoptouts.com/" rel="noopener">EasyOptOuts</a> &mdash; cheap, no-frills quarterly broker removal</li>
+        <li><a href="https://privacybee.com/" rel="noopener">PrivacyBee</a> &mdash; broker removal + wider corporate data-request coverage</li>
+        <li><a href="https://onerep.com/" rel="noopener">OneRep</a> &mdash; broker removal with a large site list</li>
+        <li><a href="https://www.privacyhawk.com/" rel="noopener">PrivacyHawk</a> &mdash; mobile-first; scans your inbox for accounts to close</li>
+        <li><a href="https://www.pureprivacy.com/" rel="noopener">PurePrivacy</a> &mdash; broker removal plus social-media privacy audits</li>
+        <li><a href="https://www.mycleanid.com/" rel="noopener">MyCleanID</a> &mdash; broker removal + identity theft insurance</li>
+        <li><a href="https://privacyzen.com/" rel="noopener">PrivacyZen</a> &mdash; broker removal (US-focused)</li>
+      </ul>
+
+      <h3 class="sub"><span class="num">02</span>identity theft / credit protection (broker removal often bundled)</h3>
+      <ul class="feature-list">
+        <li><a href="https://www.identityguard.com/" rel="noopener">IdentityGuard</a> &mdash; identity theft + broker removal + credit monitoring</li>
+        <li><a href="https://www.bitdefender.com/en-us/consumer/identity-theft-protection" rel="noopener">Bitdefender Identity Theft Protection</a></li>
+        <li><a href="https://www.identityforce.com/" rel="noopener">IdentityForce</a></li>
+        <li><a href="https://www.idstrong.com/" rel="noopener">IdentityStrong</a></li>
+        <li><a href="https://www.allstateidentityprotection.com/personal?pref=personal" rel="noopener">Allstate Identity Protection</a></li>
+        <li><a href="https://www.idx.us/knowledge-center/how-to-enroll-in-your-data-breach-protection-plan" rel="noopener">IDX Complete</a> &mdash; often provided free after a breach settlement; enroll if offered</li>
+      </ul>
+
+      <h3 class="sub"><span class="num">03</span>free breach monitoring</h3>
+      <ul class="feature-list">
+        <li><a href="https://monitor.mozilla.org/" rel="noopener">Mozilla Monitor</a> &mdash; free breach lookups; paid tier adds broker removal</li>
+        <li><a href="https://duckduckgo.com/duckduckgo-help-pages/resources/opt-out-guides" rel="noopener">DuckDuckGo Privacy Pro</a> &mdash; opt-out guides + a paid privacy bundle</li>
+        <li><a href="https://www.malwarebytes.com/personal-data-remover" rel="noopener">Malwarebytes Personal Data Remover</a></li>
+        <li><a href="https://www.avg.com/en-us/breachguard#pc" rel="noopener">AVG BreachGuard</a></li>
+      </ul>
+    </section>
+
+    <section class="block" id="workflow">
+      <h2 class="label"><span class="mark"></span>how to actually use them</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; the practical flow</span>
+        <ol>
+          <li>run a free scan on 2&ndash;3 providers &mdash; each finds a different subset of brokers</li>
+          <li>pick the one that covers the brokers that actually list <em>you</em></li>
+          <li>set a reminder to check the removal dashboard every quarter</li>
+          <li>pair with a <a href="/guides/keyword-alerting.html">Google Alerts setup</a> for the long tail brokers no service covers</li>
+          <li>if you rent, change addresses, or change phone numbers &mdash; expect a re-listing wave 30&ndash;60 days later and let the service pick it up</li>
+        </ol>
+      </div>
+      <p class="prose">removal is not one-and-done. brokers scrape public records continuously; every time you register to vote, buy a house, get a marriage license, or change your driver&rsquo;s license address, the record propagates to a new batch of sites within a few weeks. a service that removes you once and never rescans is worse than useless &mdash; it gives you false confidence. anything you sign up for should do <em>at least</em> quarterly rescans and ideally monthly.</p>
+    </section>
+
+    <section class="block" id="gotchas">
+      <h2 class="label"><span class="mark"></span>gotchas</h2>
+      <ul class="feature-list">
+        <li>most services can&rsquo;t remove court records, voter rolls, or business registrations &mdash; those are the source data. they can only remove downstream broker copies</li>
+        <li>coverage is usually us-focused. eu/uk gdpr rights are a separate flow (some providers handle both)</li>
+        <li>the free tier of most providers only removes you from the biggest 5&ndash;10 brokers &mdash; useful, but the long tail is where the real work is</li>
+        <li>if you cancel, brokers will relist you &mdash; the removals don&rsquo;t &ldquo;stick&rdquo; on their own</li>
+        <li>never give a removal service your social security number unless it&rsquo;s also an identity theft insurance product with a clear legal framework</li>
+        <li>expect false positives &mdash; broker sites frequently list wrong middle initials, wrong ages, wrong relatives. the service will submit removal for those too, which is fine</li>
+        <li>identity theft insurance from these providers usually caps at $1M and covers legal/reimbursement costs, not the fraud loss itself &mdash; read the fine print</li>
+      </ul>
+    </section>
+
+    <footer class="foot muted">
+      <p>&copy; 2026 zachisfine &middot; <a href="/">home</a> &middot; <a href="/guides/keyword-alerting.html">keyword alerting guide</a> &middot; <a href="/guides/passwords.html">password hygiene</a></p>
+    </footer>
+  </main>
+  <script src="/parallax.js" defer></script>
+</body>
+</html>

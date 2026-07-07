@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>network privacy &middot; zachisfine</title>
+  <meta name="description" content="What a VPN actually does, which providers are worth using, how to lock down UPnP, harden your firewall, and layer in Zero Trust Network Access." />
+  <link rel="canonical" href="https://zachisfine.xyz/guides/network-privacy.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="network privacy" />
+  <meta property="og:description" content="VPNs, UPnP, firewall, ZTNA, NAC &mdash; a practical layered guide." />
+  <meta property="og:url" content="https://zachisfine.xyz/guides/network-privacy.html" />
+  <meta property="og:image" content="https://zachisfine.xyz/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="parallax" aria-hidden="true">
+    <div class="parallax__grid"></div>
+    <div class="parallax__glow parallax__glow--a"></div>
+    <div class="parallax__glow parallax__glow--b"></div>
+    <div class="parallax__glow parallax__glow--c"></div>
+  </div>
+  <main class="page">
+    <a class="back" href="/">&larr; back</a>
+
+    <header class="hero">
+      <h1 class="name">network privacy</h1>
+      <p class="tagline">vpns, upnp, firewall, ztna, and nac &mdash; a layered guide for home and small office</p>
+      <div class="meta-row">
+        <span class="tag-pill">vpn</span>
+        <span class="tag-pill">firewall</span>
+        <span class="tag-pill">upnp</span>
+        <span class="tag-pill">ztna</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="on this page">
+      <p class="toc__title">on this page</p>
+      <ul class="toc__list">
+        <li><a href="#vpn-basics">vpn: what it does and doesn&rsquo;t do</a></li>
+        <li><a href="#vpn-paid">recommended paid vpns</a></li>
+        <li><a href="#vpn-free">free vpns worth using</a></li>
+        <li><a href="#upnp">upnp</a></li>
+        <li><a href="#firewall">firewall</a></li>
+        <li><a href="#ztna">remote access (ztna)</a></li>
+        <li><a href="#nac">advanced: network access control</a></li>
+      </ul>
+    </nav>
+
+    <section class="block" id="vpn-basics">
+      <h2 class="label"><span class="mark"></span>vpn: what it does and doesn&rsquo;t do</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>a vpn only protects your <em>network path</em>, not your identity. anything you log into over a vpn is still tied to your real identity &mdash; the vpn only hides which network you were on. the value is against your isp, hotel wifi, coffee shop wifi, and opportunistic snooping; not against sites you&rsquo;re actively using an account on.</p>
+      </div>
+      <p class="prose">a common misconception: &ldquo;i&rsquo;m using a vpn so i&rsquo;m anonymous.&rdquo; you&rsquo;re not. when you sign into gmail through a vpn, google sees a vpn ip but recognizes you from your account cookies, browser fingerprint, and login &mdash; and now that identity is associated with both your isp ip <em>and</em> the vpn ip. what a vpn does prevent: your isp from logging every domain you visit, wifi network operators from man-in-the-middling unencrypted traffic, and geolocation-based restrictions that key on ip.</p>
+      <p class="prose">the trust model shifts, not disappears. you&rsquo;re moving your trust from your isp to the vpn provider &mdash; so the provider&rsquo;s logging policy, jurisdiction, and history matter more than raw speed.</p>
+    </section>
+
+    <section class="block" id="vpn-paid">
+      <h2 class="label"><span class="mark"></span>recommended paid vpns</h2>
+      <table class="cmp-table">
+        <thead>
+          <tr><th>provider</th><th>notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://mullvad.net/" rel="noopener">Mullvad</a></td>
+            <td>highly recommended. no account &mdash; you get a random account number, pay flat $5/mo (crypto/cash accepted), no logs. wireguard first-class. built-in kill switch, per-app exclusion, location switcher. sweden-based, transparent audit history</td>
+          </tr>
+          <tr>
+            <td><a href="https://privateinternetaccess.com/" rel="noopener">Private Internet Access</a></td>
+            <td>privacy-focused, strict no-log policy proven in court. large server network. advanced per-connection controls. good for power users</td>
+          </tr>
+          <tr>
+            <td><a href="https://nordvpn.com/" rel="noopener">NordVPN</a></td>
+            <td>fast, huge server footprint, threat protection (ad/malware blocking) built in. good for streaming / geo-unblocking use cases; less minimalist than mullvad</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="prose">any of these three is fine. mullvad is the cleanest pick for pure privacy (no email, no account, flat pricing means no marketing incentives). pia is the pick if you want granular controls. nord is the pick if performance and geo-unblocking matter most.</p>
+    </section>
+
+    <section class="block" id="vpn-free">
+      <h2 class="label"><span class="mark"></span>free vpns worth using</h2>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        most free vpns are trap products. servers and bandwidth cost money &mdash; if you&rsquo;re not paying, your traffic is the product (logged, injected with ads, or resold). the exceptions below are from companies that make money elsewhere and use the vpn as a loss-leader / privacy-brand exercise.
+      </div>
+      <ul class="feature-list">
+        <li><a href="https://1.1.1.1/" rel="noopener">Cloudflare WARP (1.1.1.1)</a> &mdash; free vpn + dns resolver. secure (doh/dot), extremely fast, no logging beyond aggregate metrics. install the WARP client. great as an always-on daily driver where you don&rsquo;t need geo-switching</li>
+        <li><a href="https://teams.cloudflare.com/" rel="noopener">Cloudflare Teams (Zero Trust)</a> &mdash; enterprise version of the above; free tier covers up to 50 users. lets you push warp to every device on your network and filter dns centrally</li>
+        <li><a href="https://protonvpn.com/" rel="noopener">Proton VPN Free</a> &mdash; free tier from a paid provider; limited to 3 countries and one device but no ads, no logs</li>
+      </ul>
+    </section>
+
+    <section class="block" id="upnp">
+      <h2 class="label"><span class="mark"></span>upnp</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>upnp lets apps on your lan open ports on your router without asking you. it&rsquo;s convenient for game consoles and torrent clients and it&rsquo;s an ongoing exposure risk for everything else. turn it off if you can; if your router doesn&rsquo;t honor the setting, test what&rsquo;s actually exposed.</p>
+      </div>
+      <p class="prose">upnp (universal plug and play) was designed to let apps behind nat request port forwards automatically. the problem: any malware on any device on your lan can also request forwards, and many routers accept upnp requests from the wan side too (they shouldn&rsquo;t, but many do). the result is a router that quietly opens ports to the internet without you knowing.</p>
+      <ul class="feature-list">
+        <li>disable upnp in your router admin panel (usually under &ldquo;advanced&rdquo; or &ldquo;wan&rdquo;)</li>
+        <li>test with <a href="https://www.grc.com/x/ne.dll?bh0bkyd2" rel="noopener">GRC&rsquo;s UPnP Exposure Test</a> &mdash; scans your public ip for a wan-side upnp response</li>
+        <li>on windows, use <a href="https://www.grc.com/unpnp/unpnp.htm" rel="noopener">GRC&rsquo;s UnPlug n&rsquo; Pray</a> to disable the ssdp service (the client-side of upnp) if you don&rsquo;t need it</li>
+      </ul>
+    </section>
+
+    <section class="block" id="firewall">
+      <h2 class="label"><span class="mark"></span>firewall</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>reset windows firewall to defaults. the default rules block inbound connections and allow outbound &mdash; that&rsquo;s what you want. years of software installs leave firewall rules behind that you don&rsquo;t need.</p>
+      </div>
+      <p class="prose">to reset: <em>control panel &rarr; windows security &rarr; firewall &amp; network protection &rarr; restore firewalls to default</em>. this wipes all custom rules; some apps will re-prompt on next launch to allow inbound (say no unless they need it). your router&rsquo;s firewall (nat + stateful inspection) is the primary line of defense; windows firewall is defense-in-depth for other devices on the same wifi network that you may not trust.</p>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        set your active network profile to &ldquo;public&rdquo; on any network you don&rsquo;t control (coffee shops, hotels, airports, conferences). &ldquo;private&rdquo; loosens firewall rules to allow file sharing, printer discovery, and network browsing &mdash; fine at home, dangerous on wifi you don&rsquo;t own.
+      </div>
+    </section>
+
+    <section class="block" id="ztna">
+      <h2 class="label"><span class="mark"></span>remote access (ztna &mdash; zero trust network access)</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>ztna replaces the &ldquo;open a port on the router&rdquo; model with an authenticated overlay network. no inbound ports, no dns leaks, and per-device / per-user access control. it&rsquo;s the modern answer to &ldquo;i need to reach my home nas / homelab from anywhere.&rdquo;</p>
+      </div>
+      <ul class="feature-list">
+        <li><a href="https://www.twingate.com/" rel="noopener">Twingate</a> &mdash; ztna gateway you install on one machine in your network; clients connect to twingate&rsquo;s cloud and get routed. generous free tier</li>
+        <li><a href="https://tailscale.com/use-cases/homelab" rel="noopener">Tailscale</a> &mdash; wireguard-based mesh vpn. every device gets an ip on your private overlay network. best-in-class for homelab; free for up to 100 devices</li>
+        <li><a href="https://www.wireguard.com/" rel="noopener">WireGuard</a> &mdash; the underlying protocol; you can self-host it directly if you want maximum control and minimum third-party trust</li>
+      </ul>
+      <p class="prose">for most people, tailscale is the answer. install it on your home server, your laptop, and your phone; you get a private ip range that works over cellular, coffee shop wifi, and behind cgnat without opening a single port on your router. it uses your identity provider (google, github, microsoft) for auth by default; you can lock that down with acls.</p>
+    </section>
+
+    <section class="block" id="nac">
+      <h2 class="label"><span class="mark"></span>advanced: network access control (nac)</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; overkill for most homes, essential for small offices</span>
+        <p>nac fingerprints every device that joins your network, quarantines unknown ones, and applies access policy based on device type. it&rsquo;s how you make sure the smart tv can&rsquo;t reach your file server and a guest laptop can only see the internet.</p>
+      </div>
+      <ul class="feature-list">
+        <li><a href="https://www.packetfence.org/" rel="noopener">PacketFence</a> &mdash; open source nac with registration, quarantine, and fingerprint-based access control. steep learning curve; runs on a linux appliance</li>
+        <li><a href="https://www.genians.com/network-access-control/" rel="noopener">Genian NAC</a> &mdash; commercial nac with strong device visibility and risk analysis</li>
+      </ul>
+      <p class="prose">for a home network the simpler alternative is vlans + a good firewall. run separate vlans for trusted (your computers), iot (smart bulbs, cameras, tvs), and guest, and firewall between them &mdash; most modern consumer routers (unifi, opnsense, pfsense) support this without any nac software.</p>
+    </section>
+
+    <footer class="foot muted">
+      <p>&copy; 2026 zachisfine &middot; <a href="/">home</a> &middot; <a href="/guides/windows-privacy.html">windows privacy</a> &middot; <a href="/guides/browser-privacy.html">browser privacy</a></p>
+    </footer>
+  </main>
+  <script src="/parallax.js" defer></script>
+</body>
+</html>

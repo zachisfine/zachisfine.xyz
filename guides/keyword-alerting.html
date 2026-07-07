@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>keyword alerting for personal privacy &middot; zachisfine</title>
+  <meta name="description" content="Use Google Alerts and paid alternatives to catch mentions of your name, phone number, email, or address on the open web before someone else does." />
+  <link rel="canonical" href="https://zachisfine.xyz/guides/keyword-alerting.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="keyword alerting for personal privacy" />
+  <meta property="og:description" content="Google Alerts and paid alternatives for personal exposure monitoring." />
+  <meta property="og:url" content="https://zachisfine.xyz/guides/keyword-alerting.html" />
+  <meta property="og:image" content="https://zachisfine.xyz/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="parallax" aria-hidden="true">
+    <div class="parallax__grid"></div>
+    <div class="parallax__glow parallax__glow--a"></div>
+    <div class="parallax__glow parallax__glow--b"></div>
+    <div class="parallax__glow parallax__glow--c"></div>
+  </div>
+  <main class="page">
+    <a class="back" href="/">&larr; back</a>
+
+    <header class="hero">
+      <h1 class="name">keyword alerting</h1>
+      <p class="tagline">catch mentions of your name, phone, email, or address on the open web before someone else does</p>
+      <div class="meta-row">
+        <span class="tag-pill">privacy</span>
+        <span class="tag-pill">monitoring</span>
+        <span class="tag-pill">osint</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="on this page">
+      <p class="toc__title">on this page</p>
+      <ul class="toc__list">
+        <li><a href="#why">why alerting matters</a></li>
+        <li><a href="#google">google alerts setup</a></li>
+        <li><a href="#operators">advanced search operators</a></li>
+        <li><a href="#watch">what to actually watch for</a></li>
+        <li><a href="#paid">paid alternatives</a></li>
+        <li><a href="#limits">limits</a></li>
+      </ul>
+    </nav>
+
+    <section class="block" id="why">
+      <h2 class="label"><span class="mark"></span>why alerting matters</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>identity monitoring services check breach dumps. keyword alerts check the public web. these are different problems and you need both. a broker removal service won&rsquo;t tell you that a random blog just posted your phone number in a comment thread &mdash; but a Google Alert on that number will, usually within a day of it being indexed.</p>
+      </div>
+      <p class="prose">the open web is where doxing lives &mdash; forum posts, pastes, dumped chat logs, low-effort blogs, and content farms that scrape leaks and republish them for ad revenue. these sites don&rsquo;t show up in breach databases because there was no &ldquo;breach&rdquo; &mdash; someone just typed your info into a comment box. an alert on the exact strings a doxer would use to identify you catches these within hours of them being indexed by google.</p>
+    </section>
+
+    <section class="block" id="google">
+      <h2 class="label"><span class="mark"></span>google alerts setup</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; setup steps</span>
+        <ol>
+          <li>go to <a href="https://www.google.com/alerts" rel="noopener">google.com/alerts</a> (signed into the google account you want notifications on)</li>
+          <li>type your search query in the box &mdash; use quotes for exact-match strings</li>
+          <li>set frequency to &ldquo;as-it-happens&rdquo; for high-signal terms, &ldquo;at most once a day&rdquo; for broad ones</li>
+          <li>sources: &ldquo;automatic&rdquo; is fine for most; switch to &ldquo;news + blogs + web&rdquo; if you want to exclude youtube/discussions</li>
+          <li>language / region: leave both as &ldquo;any&rdquo; unless you specifically only care about english results</li>
+          <li>how many: &ldquo;only the best results&rdquo; hides most spam; &ldquo;all results&rdquo; is noisier but catches more</li>
+          <li>deliver to: your email or an rss feed url</li>
+        </ol>
+      </div>
+      <p class="prose">google alerts is free, has been running since 2003, and is still the best single tool for personal keyword monitoring on the indexed web. it re-runs your search query on a schedule and emails you when a new indexed page matches. the tradeoff vs paid tools is coverage &mdash; alerts only sees what google&rsquo;s crawler sees, so private forums, telegram, and most short-lived paste sites won&rsquo;t trigger.</p>
+    </section>
+
+    <section class="block" id="operators">
+      <h2 class="label"><span class="mark"></span>advanced search operators</h2>
+      <p class="prose">the reason keyword alerts are useful is because you can use google&rsquo;s query language to make them precise. these all work inside a google alert query the same way they do in a regular search.</p>
+      <table class="cmp-table">
+        <thead>
+          <tr><th>operator</th><th>example</th><th>what it does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>"..."</code></td><td><code>"555-123-4567"</code></td><td>exact match &mdash; forces the whole string to appear as-is</td></tr>
+          <tr><td><code>OR</code></td><td><code>"john smith" OR "j smith"</code></td><td>either variant matches</td></tr>
+          <tr><td><code>-</code></td><td><code>"john smith" -actor</code></td><td>excludes results containing the term</td></tr>
+          <tr><td><code>site:</code></td><td><code>"john smith" site:pastebin.com</code></td><td>only matches on the given domain</td></tr>
+          <tr><td><code>-site:</code></td><td><code>"john smith" -site:linkedin.com</code></td><td>excludes a domain (useful for filtering out your own profile)</td></tr>
+          <tr><td><code>intext:</code></td><td><code>intext:"555-123-4567"</code></td><td>the term must appear in body text, not just the url or title</td></tr>
+          <tr><td><code>inurl:</code></td><td><code>"john smith" inurl:contact</code></td><td>the url must contain the term (finds public contact pages)</td></tr>
+          <tr><td><code>filetype:</code></td><td><code>"555-123-4567" filetype:pdf</code></td><td>only matches within a specific file type &mdash; useful for leaked docs</td></tr>
+          <tr><td><code>*</code></td><td><code>"john * smith"</code></td><td>wildcard between words &mdash; catches middle names, honorifics</td></tr>
+        </tbody>
+      </table>
+      <p class="prose">combine them. <code>"john smith" "555-123-4567" -site:linkedin.com -site:whitepages.com</code> will only fire on pages that have both strings together and aren&rsquo;t your own linkedin or the top broker sites you already know about.</p>
+    </section>
+
+    <section class="block" id="watch">
+      <h2 class="label"><span class="mark"></span>what to actually watch for</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; suggested alerts</span>
+        <ul>
+          <li><code>"Firstname Lastname"</code> &mdash; obvious but noisy; use exclusions to prune</li>
+          <li><code>"Firstname Middlename Lastname"</code> &mdash; much quieter, catches formal listings</li>
+          <li><code>"555-123-4567" OR "5551234567" OR "(555) 123-4567"</code> &mdash; phone number in all common formats</li>
+          <li><code>"you@example.com"</code> &mdash; your primary email; add each variant you actually use</li>
+          <li><code>"123 Main St" "Yourtown"</code> &mdash; address plus city forces both to appear together, cuts false hits</li>
+          <li><code>"handle" site:pastebin.com OR site:ghostbin.com OR site:justpaste.it</code> &mdash; your handles on paste sites specifically</li>
+          <li><code>"handle" "password"</code> &mdash; catches credential dumps that mention your username</li>
+          <li>your kid&rsquo;s full name, if you have one &mdash; harder to remediate than yours</li>
+        </ul>
+      </div>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        alerts that trigger on your own name will fire on your own social profiles, articles you&rsquo;ve written, obituaries of unrelated people, and any celebrity who shares your name. spend the first two weeks tuning exclusions with <code>-site:</code> until the signal-to-noise is manageable, otherwise you&rsquo;ll turn them off.
+      </div>
+    </section>
+
+    <section class="block" id="paid">
+      <h2 class="label"><span class="mark"></span>paid alternatives</h2>
+      <p class="prose">google alerts is enough for personal monitoring. paid tools exist for pr, marketing, and journalist workflows where you need more coverage (more sources, faster crawl cadence, sentiment analysis, historical archives). they&rsquo;re overkill for a private individual but useful if you have a public persona to monitor.</p>
+      <ul class="feature-list">
+        <li><a href="https://remembrapp.com/" rel="noopener">RemembrApp</a> &mdash; alerts + a knowledge-base workflow around the results</li>
+        <li><a href="https://prowly.com/media-monitoring/" rel="noopener">Prowly</a> &mdash; pr-focused media monitoring; expensive; broader than just search indexes</li>
+        <li><a href="https://www.talkwalker.com/alerts" rel="noopener">TalkWalker Alerts</a> &mdash; free tier is a strong direct alternative to google alerts, includes twitter and news</li>
+        <li><a href="https://awario.com/" rel="noopener">Awario</a> &mdash; social listening + web monitoring, boolean queries similar to google&rsquo;s operators</li>
+      </ul>
+    </section>
+
+    <section class="block" id="limits">
+      <h2 class="label"><span class="mark"></span>limits</h2>
+      <ul class="feature-list">
+        <li>alerts only see the indexed web &mdash; private discords, telegram, most forum walls, and closed pastebins won&rsquo;t trigger anything</li>
+        <li>google&rsquo;s crawl delay for low-traffic sites is days to weeks; expect lag on obscure blogs</li>
+        <li>if a page uses javascript to render your info dynamically, google may not index that text at all</li>
+        <li>content in images (screenshots of chat logs, doxes as png) won&rsquo;t match text-based alerts &mdash; those need reverse-image search workflows instead</li>
+        <li>alerts pair well with broker removal but don&rsquo;t replace it &mdash; brokers use their own crawl / api pipelines that don&rsquo;t always hit google</li>
+      </ul>
+    </section>
+
+    <footer class="foot muted">
+      <p>&copy; 2026 zachisfine &middot; <a href="/">home</a> &middot; <a href="/guides/identity-monitoring.html">identity monitoring</a> &middot; <a href="/guides/passwords.html">password hygiene</a></p>
+    </footer>
+  </main>
+  <script src="/parallax.js" defer></script>
+</body>
+</html>

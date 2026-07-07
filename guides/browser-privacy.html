@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>browser privacy &middot; zachisfine</title>
+  <meta name="description" content="Which browser to use, which extensions actually help, and how to configure them. Covers Chrome, Brave, Firefox, and Edge." />
+  <link rel="canonical" href="https://zachisfine.xyz/guides/browser-privacy.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="browser privacy" />
+  <meta property="og:description" content="Browser choice + extension setup for a private browsing baseline." />
+  <meta property="og:url" content="https://zachisfine.xyz/guides/browser-privacy.html" />
+  <meta property="og:image" content="https://zachisfine.xyz/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="parallax" aria-hidden="true">
+    <div class="parallax__grid"></div>
+    <div class="parallax__glow parallax__glow--a"></div>
+    <div class="parallax__glow parallax__glow--b"></div>
+    <div class="parallax__glow parallax__glow--c"></div>
+  </div>
+  <main class="page">
+    <a class="back" href="/">&larr; back</a>
+
+    <header class="hero">
+      <h1 class="name">browser privacy</h1>
+      <p class="tagline">which browser to use, which extensions actually help, and how to set them up</p>
+      <div class="meta-row">
+        <span class="tag-pill">brave</span>
+        <span class="tag-pill">chrome</span>
+        <span class="tag-pill">ublock origin</span>
+        <span class="tag-pill">fingerprinting</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="on this page">
+      <p class="toc__title">on this page</p>
+      <ul class="toc__list">
+        <li><a href="#choice">choosing a browser</a></li>
+        <li><a href="#extensions">must-have extensions</a></li>
+        <li><a href="#ublock">ublock origin lite</a></li>
+        <li><a href="#badger">privacy badger</a></li>
+        <li><a href="#canvas">canvas blocker</a></li>
+        <li><a href="#brave">brave built-ins</a></li>
+        <li><a href="#tips">general tips</a></li>
+      </ul>
+    </nav>
+
+    <section class="block" id="choice">
+      <h2 class="label"><span class="mark"></span>choosing a browser</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <ul>
+          <li><strong>brave</strong> &mdash; recommended. chromium base means every chrome extension works, and it ships privacy defaults you&rsquo;d otherwise install extensions to get</li>
+          <li><strong>chrome</strong> &mdash; use with the extensions below if you&rsquo;re locked into the google ecosystem, but accept that google itself is a data broker in the pipeline</li>
+          <li><strong>firefox</strong> &mdash; historically the privacy default; not currently recommended as a primary browser after mozilla&rsquo;s 2025 terms-of-use rewrite (<a href="https://techcrunch.com/2025/03/03/mozilla-rewrites-firefoxs-terms-of-use-after-user-backlash/" rel="noopener">context</a>). still fine for occasional use with strict config</li>
+          <li><strong>microsoft edge</strong> &mdash; not recommended (<a href="https://www.slashgear.com/7-reasons-to-stop-using-microsoft-edge-03701116/" rel="noopener">context</a>). heavy microsoft telemetry, aggressive nudging to switch back after you set another default, bundled bing/copilot/rewards features you cannot fully disable</li>
+        </ul>
+      </div>
+      <p class="prose">brave is the pragmatic recommendation because it uses chromium (so the extensions in this guide work identically to chrome) but changes the defaults &mdash; ad and tracker blocking are on out of the box, fingerprint randomization is built in, and there&rsquo;s no google account integration nudging you at every turn. the tradeoff is brave&rsquo;s own experiments (bat rewards, sponsored top-sites, brave search) &mdash; all optional, all off-able in settings.</p>
+    </section>
+
+    <section class="block" id="extensions">
+      <h2 class="label"><span class="mark"></span>must-have extensions</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; install these three</span>
+        <ul>
+          <li><strong>uBlock Origin Lite</strong> &mdash; content and script blocker</li>
+          <li><strong>Privacy Badger</strong> &mdash; heuristic tracker blocker</li>
+          <li><strong>Canvas Blocker</strong> &mdash; anti-fingerprinting</li>
+        </ul>
+      </div>
+      <p class="prose">for each of the three, after install, open the extension&rsquo;s options page and set the same three flags: <em>allow in incognito</em> on, <em>allow access to file urls</em> on, <em>collect errors</em> off. these live at <code>chrome://extensions/?id=&lt;extension-id&gt;</code>. brave uses the same urls.</p>
+    </section>
+
+    <section class="block" id="ublock">
+      <h2 class="label"><span class="mark"></span>uBlock Origin Lite</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <ul>
+          <li>install: <a href="https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh" rel="noopener">Chrome Web Store</a></li>
+          <li>hardened filter list to import: <a href="https://pastebin.com/raw/aN0nghe5" rel="noopener">pastebin.com/raw/aN0nghe5</a></li>
+          <li>options page: <code>chrome://extensions/?id=ddkjiahejlhfcafbddmgiahcphecmpfh</code></li>
+          <li>enable: allow in incognito, allow access to file urls</li>
+          <li>disable: collect errors</li>
+        </ul>
+      </div>
+      <p class="prose">uBlock Origin Lite is the manifest v3 successor to the original uBlock Origin. it blocks ads, trackers, and coin miners using regularly-updated filter lists. the hardened import above is more aggressive than the defaults &mdash; expect a small number of sites to break; disable per-site as needed. it&rsquo;s the single biggest privacy improvement you can make in a browser, and it&rsquo;s free.</p>
+    </section>
+
+    <section class="block" id="badger">
+      <h2 class="label"><span class="mark"></span>Privacy Badger</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <ul>
+          <li>install: <a href="https://chromewebstore.google.com/detail/privacy-badger/pkehgijcmpdhfbdbbnkijodmdjhbjlgp" rel="noopener">Chrome Web Store</a></li>
+          <li>recommended config screenshot: <a href="https://i.imgur.com/OWDJ8oi.png" rel="noopener">i.imgur.com/OWDJ8oi.png</a></li>
+          <li>options page: <code>chrome://extensions/?id=pkehgijcmpdhfbdbbnkijodmdjhbjlgp</code></li>
+          <li>enable: allow in incognito, allow access to file urls</li>
+          <li>disable: collect errors</li>
+        </ul>
+      </div>
+      <p class="prose">privacy badger from the eff is a heuristic tracker blocker &mdash; instead of using a fixed filter list, it watches which third-party domains follow you across sites and starts blocking them automatically. it overlaps with ublock&rsquo;s tracker blocking but catches trackers that aren&rsquo;t on any list yet. minimal maintenance; runs in the background.</p>
+    </section>
+
+    <section class="block" id="canvas">
+      <h2 class="label"><span class="mark"></span>Canvas Blocker</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <ul>
+          <li>install: <a href="https://chromewebstore.google.com/detail/canvas-blocker-fingerprin/nomnklagbgmgghhjidfhnoelnjfndfpd" rel="noopener">Chrome Web Store</a></li>
+          <li>recommended config screenshot: <a href="https://i.imgur.com/Jhb0RJb.png" rel="noopener">i.imgur.com/Jhb0RJb.png</a></li>
+          <li>options page: <code>chrome://extensions/?id=nomnklagbgmgghhjidfhnoelnjfndfpd</code></li>
+          <li>enable: allow in incognito, allow access to file urls</li>
+          <li>disable: collect errors</li>
+        </ul>
+      </div>
+      <p class="prose">canvas fingerprinting is a tracking technique where a site draws a hidden image using html5 canvas or webgl and hashes the pixel output &mdash; because the pixels vary slightly across gpu / driver / os combinations, the hash becomes a stable identifier for your device even in incognito. canvas blocker adds noise to the pixel output so the fingerprint changes on every page load, defeating the technique.</p>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        canvas noise breaks a small number of legitimate features &mdash; captchas that use canvas, some drawing apps, and a few 3d viewers. whitelist per-site when you hit them; don&rsquo;t disable globally.
+      </div>
+    </section>
+
+    <section class="block" id="brave">
+      <h2 class="label"><span class="mark"></span>brave built-ins to enable</h2>
+      <p class="prose">if you use brave, you get most of the above for free. the settings worth flipping on that aren&rsquo;t on by default:</p>
+      <ul class="feature-list">
+        <li><em>settings &rarr; shields &rarr; trackers &amp; ads blocking</em> &rarr; aggressive</li>
+        <li><em>settings &rarr; shields &rarr; fingerprinting blocking</em> &rarr; strict</li>
+        <li><em>settings &rarr; shields &rarr; block scripts</em> &rarr; on (this will break some sites; toggle per-site as needed)</li>
+        <li><em>settings &rarr; privacy &amp; security &rarr; webrtc ip handling policy</em> &rarr; disable non-proxied udp</li>
+        <li><em>settings &rarr; leo (ai)</em> &rarr; off unless you actively use it</li>
+        <li><em>settings &rarr; brave rewards</em> &rarr; off unless you actively want it</li>
+        <li><em>settings &rarr; new tab page</em> &rarr; disable sponsored images, disable news feed</li>
+      </ul>
+    </section>
+
+    <section class="block" id="tips">
+      <h2 class="label"><span class="mark"></span>general tips</h2>
+      <ul class="feature-list">
+        <li>use different browser profiles for different threat models &mdash; work, personal, banking, throwaway</li>
+        <li>never sign into your primary google account in a browser you also use for research / general browsing</li>
+        <li>clear cookies + storage on browser close for any profile that doesn&rsquo;t need persistent sessions</li>
+        <li>use a search engine that doesn&rsquo;t log you (brave search, duckduckgo, kagi) as your default &mdash; searches are as revealing as browsing history</li>
+        <li>disable third-party cookies at the browser level (default in brave; opt-in in chrome)</li>
+        <li>use https-only mode &mdash; brave and chrome both offer it in settings</li>
+        <li>test your fingerprint at <a href="https://coveryourtracks.eff.org/" rel="noopener">coveryourtracks.eff.org</a> after configuring extensions</li>
+      </ul>
+    </section>
+
+    <footer class="foot muted">
+      <p>&copy; 2026 zachisfine &middot; <a href="/">home</a> &middot; <a href="/guides/windows-privacy.html">windows privacy</a> &middot; <a href="/guides/network-privacy.html">network privacy</a></p>
+    </footer>
+  </main>
+  <script src="/parallax.js" defer></script>
+</body>
+</html>
