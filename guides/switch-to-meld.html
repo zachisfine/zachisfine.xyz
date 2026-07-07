@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>switching from obs to meld studio &middot; zachisfine</title>
+  <meta name="description" content="A practical guide for streamers moving from OBS to Meld Studio: scene rebuild, audio routing, encoder settings, SRT ingest to Kick, and the gotchas nobody warns you about." />
+  <link rel="canonical" href="https://zachisfine.xyz/guides/switch-to-meld.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="switching from obs to meld studio" />
+  <meta property="og:description" content="OBS → Meld migration, video optimization, and SRT streaming to Kick." />
+  <meta property="og:url" content="https://zachisfine.xyz/guides/switch-to-meld.html" />
+  <meta property="og:image" content="https://zachisfine.xyz/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="parallax" aria-hidden="true">
+    <div class="parallax__grid"></div>
+    <div class="parallax__glow parallax__glow--a"></div>
+    <div class="parallax__glow parallax__glow--b"></div>
+    <div class="parallax__glow parallax__glow--c"></div>
+  </div>
+  <main class="page">
+    <a class="back" href="/">&larr; back</a>
+
+    <header class="hero">
+      <h1 class="name">switching from obs to meld studio</h1>
+      <p class="tagline">a working streamer&rsquo;s migration guide &mdash; scene rebuild, audio, encoder, srt to kick, gotchas</p>
+      <div class="meta-row">
+        <span class="tag-pill">meld studio</span>
+        <span class="tag-pill">obs</span>
+        <span class="tag-pill">srt</span>
+        <span class="tag-pill">kick</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="on this page">
+      <p class="toc__title">on this page</p>
+      <ul class="toc__list">
+        <li><a href="#why">why switch</a></li>
+        <li><a href="#preflight">pre-flight</a></li>
+        <li><a href="#install">install &amp; first run</a></li>
+        <li><a href="#scenes">migrating scenes</a></li>
+        <li><a href="#terminology">obs &harr; meld map</a></li>
+        <li><a href="#audio">audio routing</a></li>
+        <li><a href="#video">video &amp; encoder settings</a></li>
+        <li><a href="#srt-kick">srt to kick</a></li>
+        <li><a href="#gotchas">meld gotchas</a></li>
+        <li><a href="#checklist">post-switch checklist</a></li>
+      </ul>
+    </nav>
+
+    <section class="block" id="why">
+      <h2 class="label"><span class="mark"></span>why switch</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>meld studio trades obs&rsquo; sprawling plugin ecosystem for a tighter, faster pipeline. it&rsquo;s built on modern graphics APIs, ships with the sources most streamers actually use, and treats audio as a first-class citizen instead of an afterthought. if you already spend more time fighting obs than streaming, meld is the swap.</p>
+      </div>
+      <p class="prose">obs is a swiss army knife maintained by volunteers. that&rsquo;s a strength and a weakness &mdash; every feature is possible, but the defaults are decades old and the render pipeline still fights modern GPUs on windows. meld was built by former twitch engineers with the assumption that you&rsquo;re already streaming, already have a webcam, already want a nice looking overlay, and don&rsquo;t want to install nine plugins to get there. the tradeoff: some obs power features (advanced scripting, the deepest plugin oddities, certain browser-source hacks) don&rsquo;t exist yet. for the 90% of streamers who never touched those, meld feels lighter and more polished.</p>
+    </section>
+
+    <section class="block" id="preflight">
+      <h2 class="label"><span class="mark"></span>pre-flight</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; back these up before you touch anything</span>
+        <ul>
+          <li>obs profile folder (<code>%appdata%\obs-studio</code> on windows, <code>~/Library/Application Support/obs-studio</code> on mac)</li>
+          <li>your scene collection JSON &mdash; export via <em>scene collection &rarr; export</em> even if meld can&rsquo;t import it, so you can reference it while rebuilding</li>
+          <li>stream keys, RTMP/SRT URLs, and any custom ingest endpoints</li>
+          <li>screenshots of every scene in preview mode (you&rsquo;ll thank yourself)</li>
+        </ul>
+      </div>
+      <p class="prose">meld doesn&rsquo;t import obs scenes. that sounds worse than it is &mdash; most streamers have three or four scenes and can rebuild them in an evening. the migration is a good excuse to prune sources you stopped using and to consolidate hotkeys.</p>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        keep obs installed and configured until your first live meld stream succeeds. if something breaks 90 seconds before you go live, you want the safety net.
+      </div>
+    </section>
+
+    <section class="block" id="install">
+      <h2 class="label"><span class="mark"></span>install &amp; first run</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <ol>
+          <li>download from <a href="https://meldstudio.co" rel="noopener">meldstudio.co</a></li>
+          <li>run the installer with default paths</li>
+          <li>on first launch, skip the sign-in for now &mdash; you can pair a service account later</li>
+          <li>let meld auto-detect your capture devices; it will populate a default scene</li>
+          <li>set your canvas resolution before you rebuild scenes (<em>settings &rarr; video &rarr; canvas</em>). 1920&times;1080 for most, 2560&times;1440 only if you&rsquo;re actually streaming at that resolution</li>
+        </ol>
+      </div>
+      <p class="prose">the first-run wizard is fine, but skip its suggested overlays &mdash; they&rsquo;re fine for testing and awful for a real channel identity. the moment meld opens, the first thing worth changing is <em>settings &rarr; general &rarr; hardware acceleration</em>. confirm your gpu is the one meld is using; on laptops with hybrid graphics, windows will sometimes hand meld the integrated gpu and you&rsquo;ll wonder why encoding looks soft.</p>
+    </section>
+
+    <section class="block" id="scenes">
+      <h2 class="label"><span class="mark"></span>migrating scenes</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>rebuild, don&rsquo;t import. use your obs screenshots as reference. hit the four scenes 95% of streams live on first: <strong>starting soon</strong>, <strong>main</strong>, <strong>brb</strong>, <strong>ending</strong>. add specialty scenes only after you&rsquo;ve streamed once on the rebuilt set.</p>
+      </div>
+      <p class="prose">meld&rsquo;s source model is close enough to obs that muscle memory transfers. right-click the scene canvas to add sources; drag from the library panel to place. the differences worth internalizing: sources in meld are grouped per-scene by default (no cross-scene references unless you explicitly link them), and the transform gizmo respects aspect-ratio locks more aggressively &mdash; hold shift to free-transform, not the other way around.</p>
+      <h3 class="sub"><span class="num">01</span>webcam</h3>
+      <p class="prose">add via <em>+ &rarr; camera</em>. meld exposes the same v4l2 / directshow devices as obs, but it applies a mild denoise + auto white balance by default. if your camera already has these on-device (elgato facecam, most mirrorless via hdmi), disable meld&rsquo;s versions to avoid double-processing.</p>
+      <h3 class="sub"><span class="num">02</span>game / display capture</h3>
+      <p class="prose">meld uses windows graphics capture (WGC) by default. it&rsquo;s faster than obs&rsquo; game capture hook for most modern games but doesn&rsquo;t work with a small set of anti-cheat wrappers. if a specific game shows a black screen, switch that source to display capture and crop to the game window.</p>
+      <h3 class="sub"><span class="num">03</span>browser source (alerts, chat, widgets)</h3>
+      <p class="prose">meld ships with a chromium runtime like obs. streamlabs, streamelements, and most third-party widgets work by pasting the browser-source URL. transparency works out of the box for URLs that use CSS <code>rgba(0,0,0,0)</code> backgrounds; a handful of older streamelements themes assume obs&rsquo; specific compositor and render with a black background &mdash; the fix is to add <code>?transparent=1</code> or edit the widget&rsquo;s theme CSS.</p>
+    </section>
+
+    <section class="block" id="terminology">
+      <h2 class="label"><span class="mark"></span>obs &harr; meld terminology map</h2>
+      <table class="cmp-table">
+        <thead>
+          <tr><th>obs</th><th>meld</th><th>note</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>scene collection</td><td>project</td><td>meld projects can hold multiple layouts and are portable across machines via export</td></tr>
+          <tr><td>scene</td><td>scene</td><td>same concept</td></tr>
+          <tr><td>source</td><td>layer</td><td>meld calls them layers; ordering behaves the same</td></tr>
+          <tr><td>filter</td><td>effect</td><td>meld has fewer built-in effects but they&rsquo;re gpu-accelerated by default</td></tr>
+          <tr><td>audio mixer</td><td>audio bus</td><td>meld gives you named buses (game, mic, alerts) instead of anonymous rows</td></tr>
+          <tr><td>global audio device</td><td>bus input</td><td>set once per project, not per scene</td></tr>
+          <tr><td>studio mode</td><td>preview + program</td><td>always on in meld; there&rsquo;s no separate toggle</td></tr>
+          <tr><td>stinger transition</td><td>video transition</td><td>drop in a webm or mov with alpha; timing point is auto-detected but adjustable</td></tr>
+          <tr><td>plugin</td><td>extension</td><td>much smaller ecosystem today; expect only first-party effects and integrations</td></tr>
+          <tr><td>scripting (lua/python)</td><td>&mdash;</td><td>no scripting today. hotkeys + websocket-style automation only</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block" id="audio">
+      <h2 class="label"><span class="mark"></span>audio routing</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; buses, not per-source knobs</span>
+        <ul>
+          <li>create three buses: <code>mic</code>, <code>game</code>, <code>alerts</code></li>
+          <li>route your interface / mic to <code>mic</code>, all app audio to <code>game</code>, and browser-source widgets to <code>alerts</code></li>
+          <li>set stream mix defaults: mic 0 dB, game -6 dB, alerts -3 dB &mdash; then tune during a test stream, not on live</li>
+          <li>enable per-bus loudness metering (LUFS) instead of squinting at peak dB</li>
+        </ul>
+      </div>
+      <p class="prose">the biggest single upgrade from obs is meld&rsquo;s audio model. obs treats every source as its own row with a fader and monitors are configured per-source. meld introduces buses: named channels you route sources into. this is how every real broadcast console has worked for forty years, and it means changes to your mic level don&rsquo;t require touching seven sliders across nine scenes.</p>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        meld&rsquo;s monitoring routing is per-bus, not per-source. if you were using obs&rsquo; &ldquo;monitor and output&rdquo; on a discord source to hear game chat, in meld you set that on the bus that contains discord &mdash; and every other source on that bus inherits it. put discord on its own bus if you need independent monitoring.
+      </div>
+    </section>
+
+    <section class="block" id="video">
+      <h2 class="label"><span class="mark"></span>video &amp; encoder settings</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; 1080p60 recipe</span>
+        <dl class="kv">
+          <dt>canvas</dt><dd>1920&times;1080</dd>
+          <dt>output</dt><dd>1920&times;1080</dd>
+          <dt>fps</dt><dd>60</dd>
+          <dt>encoder</dt><dd>nvenc h.264 (nvidia) / amf hevc or h.264 (amd) / apple silicon hevc (mac)</dd>
+          <dt>rate control</dt><dd>cbr</dd>
+          <dt>bitrate</dt><dd>6000 kbps (twitch), 8000&ndash;9000 kbps (youtube/kick)</dd>
+          <dt>keyframe interval</dt><dd>2 s</dd>
+          <dt>preset</dt><dd>quality / p5</dd>
+          <dt>psycho-visual tuning</dt><dd>on</dd>
+          <dt>look-ahead</dt><dd>on (if gpu allows)</dd>
+          <dt>b-frames</dt><dd>2</dd>
+        </dl>
+      </div>
+      <p class="prose">meld exposes almost the same encoder tuning as obs, but it hides the historically-confusing options behind sensible presets. the recipe above is the &ldquo;quality first&rdquo; setting for a 1080p60 stream &mdash; it&rsquo;ll saturate a 25 mbps upload comfortably and leave headroom for chat + discord + backup ingest. drop the bitrate to 4500 kbps if your upstream tests below 8 mbps at peak.</p>
+      <h3 class="sub"><span class="num">01</span>choosing the encoder</h3>
+      <p class="prose">always prefer hardware. x264 on cpu is only worth it if you have a threadripper doing nothing else, and even then modern nvenc / amf output is visually indistinguishable at bitrates streamers actually use. on windows with an nvidia gpu, nvenc h.264 is the safe default; hevc looks better but not every ingest supports it. on apple silicon, the built-in hevc encoder is excellent and free.</p>
+      <h3 class="sub"><span class="num">02</span>bitrate ladder</h3>
+      <p class="prose">match bitrate to the game and platform. static talking-head content sits comfortably at 3500 kbps; fast-motion first-person games want 6000+ to avoid mush. platform caps: twitch soft-caps at 6000 kbps h.264 for most partners, kick and youtube accept 8000&ndash;9000 kbps h.264 or hevc. going higher without a stable upload just adds jitter and dropped frames.</p>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        cbr, not vbr. every real streaming platform expects constant bitrate; vbr saves bandwidth in your uplink but the ingest treats the variation as network jitter and can trigger fallback logic mid-stream.
+      </div>
+    </section>
+
+    <section class="block" id="srt-kick">
+      <h2 class="label"><span class="mark"></span>srt to kick</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <ol>
+          <li>email kick support and request srt ingest access for your channel (they enable per-account, not per-stream)</li>
+          <li>they respond with an srt endpoint (<code>srt://ingest.kick.com:port</code>) and instructions on the streamid format</li>
+          <li>in meld: <em>settings &rarr; stream &rarr; custom srt</em>; paste the full url including <code>?streamid=&hellip;</code></li>
+          <li>set latency to 2000 ms as a starting point; drop to 1000 only if you know your uplink is rock-solid</li>
+          <li>test into a private channel before you go live publicly &mdash; srt behaves differently than rtmp when your connection hiccups</li>
+        </ol>
+      </div>
+      <p class="prose">srt (secure reliable transport) is the protocol that replaced rtmp for professional broadcasts. it uses udp with its own reliability layer, which means it&rsquo;s more resilient to packet loss than rtmp (which rides on tcp and blocks the whole stream when a segment is late). kick supports it but you have to ask &mdash; they gate it behind a support ticket because most viewers still don&rsquo;t benefit from the difference, and setting the latency parameter wrong is a great way to look worse than you did on rtmp.</p>
+      <h3 class="sub"><span class="num">01</span>what latency actually does</h3>
+      <p class="prose">the srt latency parameter is your buffer for retransmits. set it to 2000 ms and the receiver waits up to two seconds for a dropped packet to be re-sent before giving up; set it to 500 ms and lost packets die faster but arrive-late packets are more likely to be too late. the practical tradeoff is glass-to-glass delay (from your camera to viewer&rsquo;s screen): 2000 ms latency adds roughly two seconds vs rtmp. viewers on kick already sit 6&ndash;12 seconds behind; adding two more is rarely noticeable but makes chat interaction slightly slower. good default: 2000 ms.</p>
+      <h3 class="sub"><span class="num">02</span>the streamid string</h3>
+      <p class="prose">kick&rsquo;s srt endpoint uses the streamid parameter to route your feed to your channel and authenticate. the format from their support email will look roughly like <code>srt://ingest.kick.com:9999?streamid=publish:CHANNEL:STREAMKEY</code>. paste the entire url into meld&rsquo;s custom srt field &mdash; don&rsquo;t try to split it into pieces. if you ever see a &ldquo;stream key: not set&rdquo; error, it&rsquo;s because meld is trying to add its own streamid; use the &ldquo;none / already in url&rdquo; option in the stream key dropdown.</p>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        srt is udp. if you&rsquo;re behind a corporate firewall or a hotel network that blocks non-standard udp ports, srt won&rsquo;t connect at all and rtmp will. keep an rtmp fallback profile saved so you can switch in under thirty seconds.
+      </div>
+      <h3 class="sub"><span class="num">03</span>testing safely</h3>
+      <p class="prose">do <em>not</em> test srt for the first time on a live public stream. kick lets you set channel visibility to unlisted / test mode; use it. start the srt stream, watch your channel on a second device on a different network, verify audio sync + latency + no dropouts for at least ten minutes. only then flip public.</p>
+    </section>
+
+    <section class="block" id="gotchas">
+      <h2 class="label"><span class="mark"></span>meld-specific gotchas</h2>
+      <ul class="feature-list">
+        <li>no scripting language today &mdash; obs lua/python scripts don&rsquo;t port. most workflows can be rebuilt with hotkeys + the automation panel; complex ones need to wait or run externally</li>
+        <li>plugin ecosystem is small &mdash; expect first-party only for now</li>
+        <li>replay buffer exists but writes larger files than obs&rsquo; equivalent at the same quality; leave more disk headroom</li>
+        <li>vertical scene layouts (9:16) work but multi-canvas output is a paid feature; obs multi-rtmp plugin has no direct equivalent</li>
+        <li>hotkey capture works only when meld is focused unless you enable global hotkeys explicitly (<em>settings &rarr; hotkeys &rarr; global</em>)</li>
+        <li>if you use vdo.ninja, ndi, or obs-websocket-driven bots, expect to rewrite the integration &mdash; meld&rsquo;s websocket api is different</li>
+        <li>the built-in noise suppressor is more aggressive than obs&rsquo; rnnoise at default settings &mdash; back it off if your voice sounds gated</li>
+        <li>meld saves project files to a different folder than obs; back up <em>documents/meld studio/projects</em> before major upgrades</li>
+      </ul>
+    </section>
+
+    <section class="block" id="checklist">
+      <h2 class="label"><span class="mark"></span>post-switch checklist</h2>
+      <p class="prose">run through this the day before your first public meld stream. it takes twenty minutes and catches nearly every mistake i&rsquo;ve seen streamers make on the switch.</p>
+      <ul class="feature-list">
+        <li>all four core scenes rebuilt and hotkey-mapped</li>
+        <li>audio buses named, levels tuned during a test stream, LUFS metering on</li>
+        <li>encoder set to hardware, cbr, keyframe interval 2 s</li>
+        <li>bitrate matched to your upload &mdash; measured, not guessed</li>
+        <li>ingest url saved (rtmp fallback profile too, if using srt)</li>
+        <li>replay buffer path on a fast drive with 20+ GB free</li>
+        <li>global hotkeys enabled if you use a stream deck</li>
+        <li>discord push-to-talk key doesn&rsquo;t collide with a meld hotkey</li>
+        <li>test stream to unlisted channel &mdash; check for dropped frames, audio sync, chat delay</li>
+        <li>obs still installed as a fallback until the first live meld stream lands cleanly</li>
+      </ul>
+    </section>
+
+    <footer class="foot muted">
+      <p>&copy; 2026 zachisfine &middot; <a href="/">home</a> &middot; <a href="/guides/irl-streaming.html">irl streaming guide</a></p>
+    </footer>
+  </main>
+  <script src="/parallax.js" defer></script>
+</body>
+</html>

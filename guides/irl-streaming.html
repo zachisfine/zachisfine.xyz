@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>irl streaming setup &middot; zachisfine</title>
+  <meta name="description" content="A practical guide to IRL streaming: bonded cellular networks, SRT, and how to actually configure Moblin, LARIX Broadcaster, PRISM Live Studio, and Kick Go Live." />
+  <link rel="canonical" href="https://zachisfine.xyz/guides/irl-streaming.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="irl streaming setup" />
+  <meta property="og:description" content="Moblin, LARIX, PRISM, Kick Go Live &mdash; cellular network foundations, SRT ingest, and gotchas from the field." />
+  <meta property="og:url" content="https://zachisfine.xyz/guides/irl-streaming.html" />
+  <meta property="og:image" content="https://zachisfine.xyz/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="parallax" aria-hidden="true">
+    <div class="parallax__grid"></div>
+    <div class="parallax__glow parallax__glow--a"></div>
+    <div class="parallax__glow parallax__glow--b"></div>
+    <div class="parallax__glow parallax__glow--c"></div>
+  </div>
+  <main class="page">
+    <a class="back" href="/">&larr; back</a>
+
+    <header class="hero">
+      <h1 class="name">irl streaming setup</h1>
+      <p class="tagline">moblin, larix, prism, kick go live &mdash; cellular network foundations, encoder settings, and field gotchas</p>
+      <div class="meta-row">
+        <span class="tag-pill">moblin</span>
+        <span class="tag-pill">larix</span>
+        <span class="tag-pill">prism</span>
+        <span class="tag-pill">kick go live</span>
+        <span class="tag-pill">srt</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="on this page">
+      <p class="toc__title">on this page</p>
+      <ul class="toc__list">
+        <li><a href="#what">what irl streaming is</a></li>
+        <li><a href="#network">network foundation</a></li>
+        <li><a href="#moblin">moblin (ios)</a></li>
+        <li><a href="#larix">larix broadcaster</a></li>
+        <li><a href="#prism">prism live studio</a></li>
+        <li><a href="#kick-go-live">kick go live app</a></li>
+        <li><a href="#bitrate">bitrate ladder</a></li>
+        <li><a href="#field">field gotchas</a></li>
+        <li><a href="#privacy">privacy &amp; safety</a></li>
+      </ul>
+    </nav>
+
+    <section class="block" id="what">
+      <h2 class="label"><span class="mark"></span>what irl streaming is</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>irl streaming means broadcasting live from wherever you happen to be walking, driving, or standing &mdash; usually from a phone or a backpack rig, over cellular. everything hard about it is the network. everything else is a solved problem.</p>
+      </div>
+      <p class="prose">a stationary streamer with fiber has a boring network story: point the encoder at the ingest and the packets arrive in order. an irl streamer is trying to hold a live rtmp or srt session together while their phone hops between three cell towers, walks into a starbucks that has captive-portal wifi, and loses one of two bonded connections when they turn a corner. the software choices (moblin, larix, prism, kick go live) matter mainly in how gracefully they handle those failures. get the network foundation right first and the app choice becomes preference.</p>
+    </section>
+
+    <section class="block" id="network">
+      <h2 class="label"><span class="mark"></span>network foundation</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr &mdash; the stack</span>
+        <ul>
+          <li><strong>protocol:</strong> srt when the platform accepts it, rtmp only as fallback</li>
+          <li><strong>bonding:</strong> combine 2&ndash;4 cellular connections with speedify, belabox, or peplink so single-modem drops don&rsquo;t drop your stream</li>
+          <li><strong>sim cards:</strong> two different carriers minimum. same-carrier bonding buys you nothing when one tower is congested</li>
+          <li><strong>modems:</strong> a mifi hotspot or a proper belabox with external antennas is worth more than a better camera</li>
+          <li><strong>battery:</strong> your phone is not enough. carry a bank rated for 20+ Wh</li>
+        </ul>
+      </div>
+      <h3 class="sub"><span class="num">01</span>srt vs rtmp on cellular</h3>
+      <p class="prose">rtmp is over tcp. tcp is fine when packet loss is a rounding error; cellular is not that. when a packet drops on rtmp, tcp waits for a retransmit and blocks everything after it in the queue &mdash; the classic &ldquo;stream buffers, then dumps 15 seconds of frames&rdquo; behavior. srt runs over udp with its own reliability layer that tracks per-packet acks and re-sends what it needs to without stalling the pipeline. on a jittery network, srt is usually the difference between a viewer noticing a hiccup and the stream dropping entirely.</p>
+      <h3 class="sub"><span class="num">02</span>bonding</h3>
+      <p class="prose">bonding is combining multiple network connections into one logical link. the two things this actually buys you: (1) more bandwidth than any single connection, (2) failover when one connection dies. speedify is the software route &mdash; runs on your phone, bonds wifi + cellular + a second hotspot. belabox is the hardware route &mdash; a small linux device you carry with 2&ndash;4 modems inside. peplink is the enterprise/production route. for a solo streamer starting out, speedify + your phone + one external mifi hotspot on a different carrier is the 80% solution.</p>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        bonding on same-carrier sims doesn&rsquo;t help. if both modems are on the same tower and the tower is congested, both connections degrade together. always mix carriers &mdash; the pain of managing two bills is smaller than the pain of a dead stream at the wrong moment.
+      </div>
+      <h3 class="sub"><span class="num">03</span>testing before you leave</h3>
+      <p class="prose">a real stress test looks like: walk the route you plan to stream, running speedtest every 30 seconds, logging results. if any segment shows sustained upload below 3 mbps on your <em>combined</em> bonded link, that segment will drop frames at 1080p. lower your target bitrate or reroute.</p>
+    </section>
+
+    <section class="block" id="moblin">
+      <h2 class="label"><span class="mark"></span>moblin (ios)</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <ul>
+          <li>free, open source, ios only</li>
+          <li>native bonded cellular via a paid moblink service or via belabox integration</li>
+          <li>full srt support with configurable latency</li>
+          <li>on-device chat overlay and scene switching &mdash; no separate laptop needed</li>
+          <li>battery-friendly compared to prism / kick go live</li>
+        </ul>
+      </div>
+      <p class="prose">moblin is the app that made high-quality solo irl streaming from a phone actually reasonable. it&rsquo;s free, actively developed on github, and unlike the polished commercial options it exposes the settings you actually need to tune when your network is unstable. the tradeoff is a learning curve &mdash; it doesn&rsquo;t hide anything.</p>
+      <h3 class="sub"><span class="num">01</span>first-time configuration</h3>
+      <div class="tldr">
+        <span class="tldr__label">recipe</span>
+        <dl class="kv">
+          <dt>resolution</dt><dd>1920&times;1080 (bump to 720p if bonded upload &lt; 4 mbps sustained)</dd>
+          <dt>fps</dt><dd>30 (60 only if you have consistent 8+ mbps up)</dd>
+          <dt>codec</dt><dd>h.265 (hevc) if your platform supports it, else h.264</dd>
+          <dt>bitrate mode</dt><dd>cbr</dd>
+          <dt>video bitrate</dt><dd>4000&ndash;6000 kbps</dd>
+          <dt>audio bitrate</dt><dd>160 kbps aac</dd>
+          <dt>keyframe interval</dt><dd>2 s</dd>
+          <dt>protocol</dt><dd>srt if available, else rtmp</dd>
+          <dt>srt latency</dt><dd>3000 ms (cellular is jittery; give it room)</dd>
+        </dl>
+      </div>
+      <h3 class="sub"><span class="num">02</span>scenes, overlays, chat</h3>
+      <p class="prose">moblin scenes work like a mini-obs: sources stacked, front camera / back camera / browser widget / chat overlay. the chat overlay pulls directly from twitch, youtube, or kick via api and renders on-screen &mdash; huge for irl because you can actually read chat without holding another device. the browser-source support lets you drop streamlabs or streamelements widgets in for alerts.</p>
+      <h3 class="sub"><span class="num">03</span>moblink and remote encoders</h3>
+      <p class="prose">moblink is a companion feature that lets you offload encoding to a second device (a mac at home) and stream from that. useful if you want quality above what a phone can encode, or if you want to layer chat / overlays from a proper obs / meld pc while the phone acts as a camera + microphone. requires a stable low-latency connection between the phone and the remote encoder, which usually means a vpn or tailscale tunnel.</p>
+    </section>
+
+    <section class="block" id="larix">
+      <h2 class="label"><span class="mark"></span>larix broadcaster</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <ul>
+          <li>ios and android, freemium (pro features paid)</li>
+          <li>the industry workhorse &mdash; rock solid, boring, does exactly what a broadcast encoder should</li>
+          <li>native srt support with adaptive bitrate</li>
+          <li>no on-device scene / overlay system &mdash; larix is a pure encoder, not a production suite</li>
+          <li>pair it with a laptop or belabox for scenes; use it as the last mile</li>
+        </ul>
+      </div>
+      <p class="prose">larix is the app professionals reach for when they don&rsquo;t care about features and do care about not dropping the stream. no chat overlay, no scenes, no fancy effects &mdash; just a solid encoder with excellent srt support and an adaptive bitrate mode that responds to network conditions faster than most competitors. use it when the phone is a camera + encoder feeding a production somewhere else, or when your priority is &ldquo;stream must not die.&rdquo;</p>
+      <h3 class="sub"><span class="num">01</span>recipe</h3>
+      <div class="tldr">
+        <span class="tldr__label">recipe</span>
+        <dl class="kv">
+          <dt>connection type</dt><dd>srt caller (matches most ingests)</dd>
+          <dt>video codec</dt><dd>h.265 preferred, h.264 fallback</dd>
+          <dt>resolution</dt><dd>1920&times;1080</dd>
+          <dt>fps</dt><dd>30</dd>
+          <dt>video bitrate</dt><dd>4500 kbps</dd>
+          <dt>adaptive bitrate</dt><dd>on &mdash; set floor to 1500 kbps</dd>
+          <dt>keyframe interval</dt><dd>2 s</dd>
+          <dt>srt latency</dt><dd>2000 ms</dd>
+          <dt>audio</dt><dd>aac 128 kbps stereo</dd>
+        </dl>
+      </div>
+      <h3 class="sub"><span class="num">02</span>adaptive bitrate</h3>
+      <p class="prose">larix&rsquo;s adaptive bitrate mode is the reason people pay for the pro version. it watches the srt round-trip time and packet loss stats and drops the encoder bitrate before packets are actually lost, then ramps back up as conditions recover. this alone is worth the price if you stream while moving.</p>
+    </section>
+
+    <section class="block" id="prism">
+      <h2 class="label"><span class="mark"></span>prism live studio</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <ul>
+          <li>ios / android / desktop, free with paid features</li>
+          <li>built-in multistream (post to twitch + youtube + facebook simultaneously without a restream service)</li>
+          <li>pretty on-screen effects, filters, virtual backgrounds &mdash; polished but heavy</li>
+          <li>no native srt in the mobile version at time of writing &mdash; rtmp only</li>
+          <li>best fit: creators who care about polish and multi-platform reach more than resilience</li>
+        </ul>
+      </div>
+      <p class="prose">prism is the &ldquo;influencer&rdquo; pick. it looks great, ships with a huge library of overlays and effects, and its multistream is the easiest way to fan out to multiple platforms from a phone. the tradeoff is weight: it burns battery and cpu faster than moblin or larix, and it can&rsquo;t use srt on mobile, which limits what you can do about a rough cellular connection. good in urban environments with solid coverage; frustrating in cars or rural stretches.</p>
+      <h3 class="sub"><span class="num">01</span>recipe</h3>
+      <div class="tldr">
+        <span class="tldr__label">recipe</span>
+        <dl class="kv">
+          <dt>protocol</dt><dd>rtmp (with a bonding app underneath if you have one)</dd>
+          <dt>resolution</dt><dd>1280&times;720 for mobile-first cellular, 1080p only if network is stable</dd>
+          <dt>fps</dt><dd>30</dd>
+          <dt>bitrate</dt><dd>3500 kbps &mdash; leave headroom for prism&rsquo;s overlay overhead</dd>
+          <dt>keyframe interval</dt><dd>2 s</dd>
+          <dt>audio</dt><dd>aac 128 kbps</dd>
+          <dt>multistream</dt><dd>on if you actually monitor multiple platforms; off if you can&rsquo;t</dd>
+        </dl>
+      </div>
+      <div class="callout--warn">
+        <span class="callout__label">gotcha</span>
+        multistream doubles your upload requirement per additional platform. streaming 3500 kbps to three platforms means your bonded uplink needs to sustain 10.5 mbps up. test before you rely on it.
+      </div>
+    </section>
+
+    <section class="block" id="kick-go-live">
+      <h2 class="label"><span class="mark"></span>kick go live app</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <ul>
+          <li>ios and android, free, kick-only</li>
+          <li>the fastest way to go live on kick from your phone &mdash; three taps</li>
+          <li>very little control: no protocol choice, no encoder tuning, no scene system, no overlays</li>
+          <li>chat, tips, and channel controls integrated directly</li>
+          <li>use for the &ldquo;grab your phone and stream now&rdquo; case, not as your main setup</li>
+        </ul>
+      </div>
+      <p class="prose">kick&rsquo;s first-party app is exactly what a platform app should be: it makes going live effortless, integrates the channel dashboard so you can see chat and moderate without opening another app, and gets out of the way. what it deliberately doesn&rsquo;t give you is the tuning knobs you&rsquo;d want for a hostile network. treat it as the &ldquo;wake up, something is happening, stream it right now&rdquo; app &mdash; for planned irl streams where quality and resilience matter, use one of the other three.</p>
+      <h3 class="sub"><span class="num">01</span>when to use it</h3>
+      <p class="prose">breaking news near you. a spontaneous meetup. a quick tour of somewhere. the trip from your gate to the airport lounge. anywhere you&rsquo;d rather be live in 10 seconds at lower quality than not live at all. don&rsquo;t plan a 4-hour drive stream around it.</p>
+    </section>
+
+    <section class="block" id="bitrate">
+      <h2 class="label"><span class="mark"></span>bitrate ladder &amp; cellular budgeting</h2>
+      <p class="prose">bitrate is a budget. your bonded upload capacity minus a safety margin equals your bitrate ceiling. never set the encoder bitrate to your peak measured upload &mdash; peaks aren&rsquo;t sustained. shoot for 60&ndash;70% of your worst-case-observed sustained upload during a walk of your route.</p>
+      <table class="cmp-table">
+        <thead>
+          <tr><th>situation</th><th>resolution</th><th>bitrate</th><th>notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>walking, urban, bonded 2 sims</td><td>1080p30</td><td>4000&ndash;5000 kbps</td><td>most common irl config</td></tr>
+          <tr><td>driving, highway, bonded 3+ sims</td><td>1080p30</td><td>3500&ndash;4500 kbps</td><td>expect tower handoffs; keep buffer bigger</td></tr>
+          <tr><td>rural / low signal, single sim</td><td>720p30</td><td>2000&ndash;3000 kbps</td><td>hevc if platform supports</td></tr>
+          <tr><td>walking, stable public wifi</td><td>1080p60</td><td>6000 kbps</td><td>rare in the wild; enjoy it</td></tr>
+          <tr><td>static setup, tripod, restaurant wifi</td><td>1080p30</td><td>4500 kbps</td><td>rtmp is fine here</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block" id="field">
+      <h2 class="label"><span class="mark"></span>field gotchas</h2>
+      <ul class="feature-list">
+        <li>heat throttles hardware encoders long before the phone feels &ldquo;too hot&rdquo; &mdash; a passive cooler + case cutout matters more than a bigger battery</li>
+        <li>tower handoffs on cellular drop frames for 200&ndash;800 ms even on srt &mdash; expect them at highway intersections and don&rsquo;t narrate through them</li>
+        <li>captive portal wifi (starbucks, hotels) will silently kill your stream when your phone auto-joins &mdash; disable auto-join for public wifi during irl streams</li>
+        <li>battery banks with pass-through charging save you when a bank dies mid-stream; ones without pass-through force a disconnect</li>
+        <li>audio: cellular latency + a lav mic on the phone&rsquo;s aux jack introduces echo when talking to people on the same platform &mdash; use bone-conduction or ir headphones for monitoring</li>
+        <li>backup phone with a dead-simple app (kick go live) primed and logged in &mdash; if your main rig fails, you swap in under 15 seconds</li>
+        <li>timezone drift: log your streams in local time in a notes file. reviewing footage months later without timestamps is misery</li>
+        <li>ram / storage: 4k recording burns roughly 400 mb/min; keep 30 GB free for a 3-hour stream</li>
+      </ul>
+    </section>
+
+    <section class="block" id="privacy">
+      <h2 class="label"><span class="mark"></span>privacy &amp; safety</h2>
+      <p class="prose">irl streaming is one of the few forms of content where you routinely broadcast the exact location of strangers who did not consent. some practical guardrails i&rsquo;d recommend to anyone streaming irl regularly:</p>
+      <ul class="feature-list">
+        <li>never stream from your home&rsquo;s exterior &mdash; even brief clips are enough for someone to geolocate you</li>
+        <li>delay chat by 20&ndash;30 seconds where the platform supports it, so you can react to hostile messages before they influence your route</li>
+        <li>never announce your route in advance. if viewers know where you&rsquo;ll be in 20 minutes, someone will be there</li>
+        <li>don&rsquo;t point the camera at other people&rsquo;s screens, badges, license plates, or house numbers</li>
+        <li>set the vod to delete or restrict after the stream if location context matters</li>
+        <li>have a &ldquo;kill switch&rdquo; hotkey or phrase that ends the stream immediately if something goes wrong &mdash; practice using it</li>
+        <li>local laws vary on filming strangers in public. know your jurisdiction; some countries treat it as harassment even in public spaces</li>
+      </ul>
+    </section>
+
+    <footer class="foot muted">
+      <p>&copy; 2026 zachisfine &middot; <a href="/">home</a> &middot; <a href="/guides/switch-to-meld.html">obs &rarr; meld guide</a></p>
+    </footer>
+  </main>
+  <script src="/parallax.js" defer></script>
+</body>
+</html>
