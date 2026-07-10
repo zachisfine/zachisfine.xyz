@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>discord server templates &middot; zachisfine</title>
+  <meta name="description" content="40 ready-to-deploy discord server templates &mdash; streaming, gaming, lifestyle, and kick-vertical layouts. hire zachisfine to install and customize one on your server." />
+  <link rel="canonical" href="https://zachisfine.xyz/templates.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="discord server templates" />
+  <meta property="og:description" content="40 ready-to-deploy discord templates for streamers, gaming communities, and kick-vertical channels." />
+  <meta property="og:url" content="https://zachisfine.xyz/templates.html" />
+  <meta property="og:image" content="https://zachisfine.xyz/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .carousel {
+      margin-top: 18px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+    }
+    .carousel__stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .carousel__img {
+      display: block;
+      max-width: 100%;
+      max-height: 75vh;
+      width: auto;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #0a0c10;
+      flex: 0 1 auto;
+      cursor: zoom-in;
+      transition: border-color .15s;
+    }
+    .carousel__img:hover { border-color: var(--accent); }
+    .carousel__btn {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--heading);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .15s, color .15s, background .15s;
+      flex-shrink: 0;
+    }
+    .carousel__btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: #1a1f27;
+    }
+    .carousel__meta {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--heading);
+      flex-wrap: wrap;
+    }
+    .carousel__meta .num {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .carousel__meta .name {
+      font-size: 1.05rem;
+      color: var(--heading);
+      flex: 1 1 auto;
+      text-align: center;
+    }
+    .carousel__jump {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .carousel__jump select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--heading);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .carousel__jump select:hover { border-color: var(--accent); }
+    .carousel__hint {
+      margin-top: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .carousel__hint kbd {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-family: inherit;
+      font-size: 0.9em;
+      color: var(--tag-fg);
+    }
+    @media (max-width: 640px) {
+      .carousel { padding: 12px; }
+      .carousel__stage { gap: 6px; }
+      .carousel__btn { width: 40px; height: 40px; font-size: 1.1rem; }
+      .carousel__meta .name { text-align: left; flex-basis: 100%; order: -1; }
+    }
+
+    /* lightbox */
+    .lb {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(5, 7, 10, 0.94);
+      display: none;
+      flex-direction: column;
+    }
+    .lb[data-open="true"] { display: flex; }
+    .lb__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text);
+      flex-wrap: wrap;
+    }
+    .lb__title { color: var(--heading); }
+    .lb__title .num { color: var(--muted); margin-right: 8px; }
+    .lb__ctrls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lb__ctrl {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--heading);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      min-width: 34px;
+    }
+    .lb__ctrl:hover { border-color: var(--accent); color: var(--accent); }
+    .lb__zoom { color: var(--muted); min-width: 56px; text-align: center; }
+    .lb__stage {
+      flex: 1 1 auto;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #05070a;
+      cursor: grab;
+      touch-action: none;
+    }
+    .lb__stage.grabbing { cursor: grabbing; }
+    .lb__img {
+      max-width: 100%;
+      max-height: 100%;
+      user-select: none;
+      -webkit-user-drag: none;
+      transform-origin: 0 0;
+      transition: transform .05s linear;
+      will-change: transform;
+    }
+    .lb__nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--heading);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.85;
+    }
+    .lb__nav:hover { border-color: var(--accent); color: var(--accent); opacity: 1; }
+    .lb__nav--prev { left: 16px; }
+    .lb__nav--next { right: 16px; }
+    .lb__hint {
+      padding: 8px 20px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: var(--panel);
+    }
+    .lb__hint kbd {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-family: inherit;
+      color: var(--tag-fg);
+    }
+
+    .pitch-cta {
+      margin-top: 32px;
+      padding: 22px 24px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--panel);
+    }
+    .pitch-cta h3 {
+      margin: 0 0 8px 0;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--heading);
+    }
+    .pitch-cta p { margin: 6px 0; color: var(--text); }
+    .pitch-cta a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="parallax" aria-hidden="true">
+    <div class="parallax__grid"></div>
+    <div class="parallax__glow parallax__glow--a"></div>
+    <div class="parallax__glow parallax__glow--b"></div>
+    <div class="parallax__glow parallax__glow--c"></div>
+  </div>
+  <main class="page">
+    <a class="back" href="/">&larr; back</a>
+
+    <header class="hero">
+      <h1 class="name">discord server templates</h1>
+      <p class="tagline">40 pre-built layouts for streamers, gaming communities, and kick-vertical channels &mdash; roles, categories, channels, permissions, all ready to install</p>
+      <div class="meta-row">
+        <span class="tag-pill">40 templates</span>
+        <span class="tag-pill">streaming</span>
+        <span class="tag-pill">gaming</span>
+        <span class="tag-pill">lifestyle</span>
+        <span class="tag-pill">kick verticals</span>
+      </div>
+    </header>
+
+    <section class="block">
+      <h2 class="label"><span class="mark"></span>what you&rsquo;re looking at</h2>
+      <div class="tldr">
+        <span class="tldr__label">tl;dr</span>
+        <p>i built 40 opinionated discord server templates over the last year. each one is a complete server layout &mdash; roles with permissions, categories, channels with topics and slow modes, staff-only sections locked down properly. flip through them below. if one fits your community, hire me to deploy and customize it on your server.</p>
+      </div>
+      <p class="prose">discord server setup is the boring, high-friction step between &ldquo;i want to build a community&rdquo; and having a working home for it. most communities either ship a bad first draft and never fix it, or spend weeks bikeshedding channel names. these templates are the shortcut: a real structure that&rsquo;s already been thought through &mdash; mod tools where mods can reach them, staff channels hidden from members, voice channels sized for the actual use case, topics written so people know where to post. pick one, i&rsquo;ll install it, and you can spend your time on the community instead of the wiring.</p>
+    </section>
+
+    <section class="block">
+      <h2 class="label"><span class="mark"></span>the gallery</h2>
+      <div class="carousel" role="region" aria-label="template preview">
+        <div class="carousel__stage">
+          <button class="carousel__btn" id="prev" aria-label="previous template">&larr;</button>
+          <img class="carousel__img" id="img" src="/img/templates/01-live-streamer-cool.png" alt="template 01 preview" />
+          <button class="carousel__btn" id="next" aria-label="next template">&rarr;</button>
+        </div>
+        <div class="carousel__meta">
+          <span class="num" id="counter">#01 &middot; 1 / 40</span>
+          <span class="name" id="name">Live Streamer &mdash; Cool/Tech</span>
+          <span class="carousel__jump">
+            jump to
+            <select id="jump" aria-label="jump to template"></select>
+          </span>
+        </div>
+        <p class="carousel__hint">use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> to navigate</p>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2 class="label"><span class="mark"></span>how deployment works</h2>
+      <ol class="feature-list" style="list-style: decimal inside; padding-left: 0;">
+        <li>you tell me which template fits (or i suggest one from your community&rsquo;s vibe)</li>
+        <li>i customize role names, colors, channel topics, and permissions for your specifics</li>
+        <li>i deploy it to your server &mdash; either into a fresh discord, or layered onto an existing server with your approval on each change</li>
+        <li>you get a written handoff doc explaining what every role, category, and channel is for, so future mods can maintain it without me</li>
+      </ol>
+      <div class="pitch-cta">
+        <h3>want a template deployed?</h3>
+        <p>message me on discord (<strong>zachisfine</strong>) or find me at the links on the <a href="/">home page</a>. tell me your community, roughly how many members, and whether you want streaming, gaming, kick-vertical, or lifestyle vibes. i&rsquo;ll pick the two or three closest templates and we&rsquo;ll customize from there.</p>
+        <p>see the full service list under <a href="/#services">services</a> for what else is included &mdash; automation, bot integrations, spam control, and long-term admin.</p>
+      </div>
+    </section>
+
+    <footer class="foot muted">
+      <p>&copy; 2026 zachisfine &middot; <a href="/">home</a> &middot; <a href="/#services">services</a></p>
+    </footer>
+  </main>
+
+  <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="template preview" data-open="false">
+    <div class="lb__bar">
+      <span class="lb__title" id="lb-title"><span class="num">#01</span>Live Streamer &mdash; Cool/Tech</span>
+      <div class="lb__ctrls">
+        <button class="lb__ctrl" id="lb-zoom-out" aria-label="zoom out">&minus;</button>
+        <span class="lb__zoom" id="lb-zoom">100%</span>
+        <button class="lb__ctrl" id="lb-zoom-in" aria-label="zoom in">+</button>
+        <button class="lb__ctrl" id="lb-reset" aria-label="reset zoom">reset</button>
+        <button class="lb__ctrl" id="lb-close" aria-label="close">esc &times; close</button>
+      </div>
+    </div>
+    <div class="lb__stage" id="lb-stage">
+      <button class="lb__nav lb__nav--prev" id="lb-prev" aria-label="previous">&larr;</button>
+      <img class="lb__img" id="lb-img" alt="" draggable="false" />
+      <button class="lb__nav lb__nav--next" id="lb-next" aria-label="next">&rarr;</button>
+    </div>
+    <p class="lb__hint">scroll to zoom &middot; drag to pan &middot; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate &middot; <kbd>esc</kbd> close</p>
+  </div>
+
+  <script>
+    const templates = [
+      { n: '01', slug: 'live-streamer-cool',   name: 'Live Streamer — Cool/Tech' },
+      { n: '02', slug: 'kick-variety',         name: 'Kick Variety Streamer' },
+      { n: '03', slug: 'twitch-variety',       name: 'Twitch Variety Streamer' },
+      { n: '04', slug: 'vtuber-kawaii',        name: 'VTuber ✿ Kawaii' },
+      { n: '05', slug: 'vtuber-edgy',          name: '⛧ VTuber :: NULL' },
+      { n: '06', slug: 'cozy-chatting',        name: '☕ cozy corner' },
+      { n: '07', slug: 'retro-gamer',          name: '▶ PRESS START ◀' },
+      { n: '08', slug: 'horror',               name: '🩸 the crypt' },
+      { n: '09', slug: 'fps-tactical',         name: '⌖ TACTICAL // OPS' },
+      { n: '10', slug: 'mmo-fantasy',          name: '⚔ The Guildhall' },
+      { n: '11', slug: 'speedrunner',          name: '⏱ any% hub' },
+      { n: '12', slug: 'racing-sim',           name: '🏁 Pit Lane' },
+      { n: '13', slug: 'minecraft',            name: '⛏ Overworld' },
+      { n: '14', slug: 'roblox',               name: '🧩 ROBLOX HUB' },
+      { n: '15', slug: 'valorant-cs',          name: '▲ RANKED HUB' },
+      { n: '16', slug: 'moba',                 name: '⚔ THE RIFT' },
+      { n: '17', slug: 'fortnite',             name: '🪂 DROP ZONE' },
+      { n: '18', slug: 'irl-travel',           name: '🌍 the road' },
+      { n: '19', slug: 'music-dj',             name: '♪ THE BOOTH' },
+      { n: '20', slug: 'art-streamer',         name: '🎨 the studio' },
+      { n: '21', slug: 'coding-dev',           name: '> devstream' },
+      { n: '22', slug: 'cooking',              name: '🍳 the kitchen' },
+      { n: '23', slug: 'fitness',              name: '💪 THE GYM' },
+      { n: '24', slug: 'asmr',                 name: '☁ soft room' },
+      { n: '25', slug: 'fashion-beauty',       name: '✨ THE RUNWAY' },
+      { n: '26', slug: 'chess-strategy',       name: '♞ the board' },
+      { n: '27', slug: 'podcast',              name: '🎙 THE SHOW' },
+      { n: '28', slug: 'indie-games',          name: '✦ INDIE HUB' },
+      { n: '29', slug: 'streamer-team',        name: '⬢ THE HOUSE' },
+      { n: '30', slug: 'charity-marathon',     name: '♥ MARATHON HQ' },
+      { n: '31', slug: 'kick-slots',           name: '🎰 THE FLOOR · Kick Slots' },
+      { n: '32', slug: 'kick-just-chatting',   name: '💬 JUST CHATTING · Kick' },
+      { n: '33', slug: 'kick-gta-rp',          name: '🚨 THE CITY · GTA RP' },
+      { n: '34', slug: 'kick-irl',             name: '📍 IRL · Kick' },
+      { n: '35', slug: 'kick-poker',           name: '♠ THE CARD ROOM · Kick Poker' },
+      { n: '36', slug: 'kick-sports-betting',  name: '📊 THE BOOK · Kick Sports' },
+      { n: '37', slug: 'kick-music',           name: '♪ THE STUDIO · Kick Music' },
+      { n: '38', slug: 'kick-asmr',            name: '☁ QUIET ROOM · Kick ASMR' },
+      { n: '39', slug: 'kick-talk-shows',      name: '🎙 THE SHOW · Kick Talk' },
+      { n: '40', slug: 'kick-educational',     name: '📚 THE CLASSROOM · Kick Edu' },
+    ];
+
+    const img = document.getElementById('img');
+    const counter = document.getElementById('counter');
+    const nameEl = document.getElementById('name');
+    const jump = document.getElementById('jump');
+
+    // populate jump dropdown
+    templates.forEach((t, i) => {
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = `#${t.n} · ${t.name}`;
+      jump.appendChild(opt);
+    });
+
+    // preload adjacent images for snappier nav
+    const preloadCache = new Map();
+    function preload(i) {
+      const idx = (i + templates.length) % templates.length;
+      if (preloadCache.has(idx)) return;
+      const t = templates[idx];
+      const im = new Image();
+      im.src = `/img/templates/${t.n}-${t.slug}.png`;
+      preloadCache.set(idx, im);
+    }
+
+    let current = 0;
+    function show(i) {
+      current = (i + templates.length) % templates.length;
+      const t = templates[current];
+      img.src = `/img/templates/${t.n}-${t.slug}.png`;
+      img.alt = `template ${t.n} preview`;
+      counter.textContent = `#${t.n} · ${current + 1} / ${templates.length}`;
+      nameEl.textContent = t.name;
+      jump.value = String(current);
+      preload(current + 1);
+      preload(current - 1);
+    }
+
+    document.getElementById('prev').addEventListener('click', () => show(current - 1));
+    document.getElementById('next').addEventListener('click', () => show(current + 1));
+    jump.addEventListener('change', (e) => show(parseInt(e.target.value, 10)));
+
+    // initial preload of neighbors
+    preload(1);
+    preload(templates.length - 1);
+
+    // ---- lightbox with wheel-zoom + drag-pan ----
+    const lb        = document.getElementById('lb');
+    const lbImg     = document.getElementById('lb-img');
+    const lbStage   = document.getElementById('lb-stage');
+    const lbTitle   = document.getElementById('lb-title');
+    const lbZoomLbl = document.getElementById('lb-zoom');
+
+    const MIN_ZOOM = 1;
+    const MAX_ZOOM = 6;
+    let scale = 1, tx = 0, ty = 0;
+
+    function applyTransform() {
+      lbImg.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+      lbZoomLbl.textContent = Math.round(scale * 100) + '%';
+    }
+    function resetZoom() {
+      scale = 1; tx = 0; ty = 0;
+      applyTransform();
+    }
+    function openLb(i) {
+      const idx = (i + templates.length) % templates.length;
+      current = idx;
+      const t = templates[idx];
+      lbImg.src = `/img/templates/${t.n}-${t.slug}.png`;
+      lbImg.alt = `template ${t.n} preview`;
+      lbTitle.innerHTML = `<span class="num">#${t.n}</span>${t.name}`;
+      resetZoom();
+      lb.dataset.open = 'true';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLb() {
+      lb.dataset.open = 'false';
+      lbImg.src = '';
+      document.body.style.overflow = '';
+    }
+    function lbNav(dir) {
+      openLb(current + dir);
+      // keep carousel in sync so closing returns to same template
+      show(current);
+    }
+
+    img.addEventListener('click', () => openLb(current));
+    document.getElementById('lb-close').addEventListener('click', closeLb);
+    document.getElementById('lb-prev').addEventListener('click', () => lbNav(-1));
+    document.getElementById('lb-next').addEventListener('click', () => lbNav(1));
+    document.getElementById('lb-zoom-in').addEventListener('click', () => zoomAt(1.25, null, null));
+    document.getElementById('lb-zoom-out').addEventListener('click', () => zoomAt(1 / 1.25, null, null));
+    document.getElementById('lb-reset').addEventListener('click', resetZoom);
+
+    // wheel zoom (zooms toward cursor)
+    function zoomAt(factor, cx, cy) {
+      const prev = scale;
+      const next = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, scale * factor));
+      if (next === prev) return;
+      if (cx == null || cy == null) {
+        // zoom about the current image center
+        const r = lbImg.getBoundingClientRect();
+        cx = r.left + r.width / 2;
+        cy = r.top + r.height / 2;
+      }
+      const r = lbImg.getBoundingClientRect();
+      const rel = { x: cx - r.left, y: cy - r.top };
+      const k = next / prev;
+      tx -= rel.x * (k - 1);
+      ty -= rel.y * (k - 1);
+      scale = next;
+      if (scale <= 1.001) { scale = 1; tx = 0; ty = 0; }
+      applyTransform();
+    }
+    lbStage.addEventListener('wheel', (e) => {
+      if (lb.dataset.open !== 'true') return;
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+      zoomAt(factor, e.clientX, e.clientY);
+    }, { passive: false });
+
+    // drag to pan
+    let dragging = false, dragX = 0, dragY = 0;
+    lbStage.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('.lb__nav') || e.target.closest('.lb__ctrl')) return;
+      dragging = true;
+      dragX = e.clientX;
+      dragY = e.clientY;
+      lbStage.classList.add('grabbing');
+      lbStage.setPointerCapture(e.pointerId);
+    });
+    lbStage.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      tx += e.clientX - dragX;
+      ty += e.clientY - dragY;
+      dragX = e.clientX;
+      dragY = e.clientY;
+      applyTransform();
+    });
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      lbStage.classList.remove('grabbing');
+      try { lbStage.releasePointerCapture(e.pointerId); } catch (_) {}
+    }
+    lbStage.addEventListener('pointerup', endDrag);
+    lbStage.addEventListener('pointercancel', endDrag);
+
+    // double-click to toggle 1x <-> 2.5x at cursor
+    lbImg.addEventListener('dblclick', (e) => {
+      if (scale > 1.001) resetZoom();
+      else zoomAt(2.5, e.clientX, e.clientY);
+    });
+
+    // keyboard: navigate + zoom + close (works in and out of lightbox)
+    document.addEventListener('keydown', (e) => {
+      if (e.target === jump) return;
+      if (lb.dataset.open === 'true') {
+        if (e.key === 'Escape') closeLb();
+        else if (e.key === 'ArrowLeft') lbNav(-1);
+        else if (e.key === 'ArrowRight') lbNav(1);
+        else if (e.key === '+' || e.key === '=') zoomAt(1.25, null, null);
+        else if (e.key === '-' || e.key === '_') zoomAt(1 / 1.25, null, null);
+        else if (e.key === '0') resetZoom();
+      } else {
+        if (e.key === 'ArrowLeft') show(current - 1);
+        else if (e.key === 'ArrowRight') show(current + 1);
+      }
+    });
+  </script>
+  <script src="/parallax.js" defer></script>
+</body>
+</html>
